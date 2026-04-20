@@ -4,7 +4,7 @@
       <RouterLink to="/" class="flex items-center gap-3">
         <span class="brand-badge">C</span>
         <span class="font-serif text-xl font-bold text-medical-900">
-          CareBridge<span class="text-primary-600">China</span>
+          {{ t('common.brandPrefix') }}<span class="text-primary-600">{{ t('common.brandSuffix') }}</span>
         </span>
       </RouterLink>
 
@@ -20,7 +20,7 @@
         </RouterLink>
         <div class="relative group">
           <button class="nav-link flex items-center gap-1">
-            Services
+            {{ t('header.services') }}
             <i class="fa-solid fa-chevron-down text-xs"></i>
           </button>
           <div
@@ -39,13 +39,16 @@
         </div>
       </nav>
 
-      <RouterLink to="/#contact" class="hidden md:inline-flex btn-pill bg-primary-600 text-white px-5 py-2.5 text-sm hover:bg-primary-700">
-        Contact Us
-      </RouterLink>
+      <div class="flex items-center gap-3">
+        <LangSwitch class="hidden md:inline-flex" />
+        <RouterLink to="/#contact" class="hidden md:inline-flex btn-pill bg-primary-600 text-white px-5 py-2.5 text-sm hover:bg-primary-700">
+          {{ t('common.contactUs') }}
+        </RouterLink>
 
-      <button class="lg:hidden text-medical-800" @click="mobileOpen = !mobileOpen" aria-label="Toggle menu">
-        <i class="fa-solid" :class="mobileOpen ? 'fa-xmark' : 'fa-bars'"></i>
-      </button>
+        <button class="lg:hidden text-medical-800" @click="mobileOpen = !mobileOpen" :aria-label="t('header.toggleMenu')">
+          <i class="fa-solid" :class="mobileOpen ? 'fa-xmark' : 'fa-bars'"></i>
+        </button>
+      </div>
     </div>
 
     <div v-if="mobileOpen" class="lg:hidden border-t border-medical-100 bg-white">
@@ -59,41 +62,42 @@
         >
           {{ link.label }}
         </RouterLink>
-        <RouterLink
-          to="/#contact"
-          class="mt-2 btn-pill bg-primary-600 text-white py-2.5 px-5 text-sm w-max"
-          @click="mobileOpen = false"
-        >
-          Contact Us
-        </RouterLink>
+        <div class="mt-2 flex items-center gap-3">
+          <LangSwitch />
+          <RouterLink
+            to="/#contact"
+            class="btn-pill bg-primary-600 text-white py-2.5 px-5 text-sm w-max"
+            @click="mobileOpen = false"
+          >
+            {{ t('common.contactUs') }}
+          </RouterLink>
+        </div>
       </div>
     </div>
   </header>
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue';
+import { computed, ref } from 'vue';
 import { RouterLink, useRoute } from 'vue-router';
+import { useI18n } from 'vue-i18n';
+import LangSwitch from '@/components/LangSwitch.vue';
 
 const route = useRoute();
 const mobileOpen = ref(false);
+const { t, tm, rt } = useI18n();
 
-const links = [
-  { to: '/', label: 'Home' },
-  { to: '/about', label: 'About Us' },
-  { to: '/why-china', label: 'Why China' },
-  { to: '/explore-china', label: 'Explore China' },
-  { to: '/medical-journey', label: 'Your Journey' }
-];
+const links = computed(() => [
+  { to: '/', label: t('header.nav.home') },
+  { to: '/about', label: t('header.nav.about') },
+  { to: '/why-china', label: t('header.nav.whyChina') },
+  { to: '/explore-china', label: t('header.nav.exploreChina') },
+  { to: '/medical-journey', label: t('header.nav.journey') }
+]);
 
-const services = [
-  'Health Screening',
-  'Dentistry',
-  'Cosmetic Surgery',
-  'Traditional Chinese Medicine',
-  'CAR-T Cell Therapy',
-  'Advanced Treatments'
-];
+const services = computed(() =>
+  (tm('header.servicesMenu') as unknown as string[]).map((s) => rt(s))
+);
 
 function isActive(to: string) {
   if (to === '/') return route.path === '/';

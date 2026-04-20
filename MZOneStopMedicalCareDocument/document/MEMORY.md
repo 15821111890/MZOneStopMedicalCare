@@ -93,9 +93,16 @@
 ## 十一、已完成内容
 
 - `MZOneStopMedicalCareServer`：登录 / 登出 / me / register，留资 POST/列表/详情/状态，`{resCode,msg,obj}` 响应协议
-- `MZOneStopMedicalCareBusiness`：Vite+Vue3+TS，登录（MD5）+ 留资列表（关键字 + 医疗项目筛选 + 分页）+ 详情（状态变更）
-- `MZOneStopMedicalCareClient`：Vite+Vue3+TS+Tailwind，5 页（Home/About/Why China/Explore China/Journey）+ 首页 `#contact` 留资表单
+- `MZOneStopMedicalCareBusiness`：Vite+Vue3+TS，登录（MD5）+ 留资列表（关键字 + 医疗项目筛选 + 分页）+ 详情（状态变更）；中英文切换（vue-i18n，顶栏 / 登录页 / Sidebar 切换器）
+- `MZOneStopMedicalCareClient`：Vite+Vue3+TS+Tailwind，5 页（Home/About/Why China/Explore China/Journey）+ 首页 `#contact` 留资表单；中英文切换（vue-i18n，顶栏 / 移动端均带 EN/中文 切换器）
 - `MZOneStopMedicalCareDocument`：Nginx 模板 `nginx/medicine.conf`、Gateway 路由补丁 `script/gateway_route_patch.json`、一键部署脚本 `script/deploy_restart_medical_project.python`、root 管理员初始化 `script/root_admin_initialize.py`
+
+### 11.1 国际化（i18n）落地约定
+
+- 两个前端均集成 `vue-i18n@^9`，`legacy: false`，默认语言按 `localStorage`（Client: `medicine-client-lang`、Business: `medicine-business-lang`），其次按 `navigator.language` 判断 `zh-*` → `zh`，否则 `en`。
+- Locale 文件位置：`<project>/src/i18n/locales/{en,zh}.ts`；切换器组件：`<project>/src/components/LangSwitch.vue`。
+- **稳定值约定**：`medicalInterest` 字段在前后端仍以英文（`Health Screening` / `Dentistry` / …）存储和比较；前端仅在展示层根据 `interests.<英文值>` 翻译。切换语言不会影响数据。
+- Status 也是纯数字枚举（0/1/2），展示端用 `status.new/contacted/closed` 翻译。
 
 ## 十二、后续事项
 
@@ -159,6 +166,20 @@ curl http://127.0.0.1/api/medicine/health            # {"resCode":"00100000",...
 ### 13.5 无关的旁观日志
 
 `/var/log/nginx/medicine_error.log` 会混入老应用 `/h5/...` 的 404 与根目录 `/favicon.ico` 的 404，与本项目无关，定位时按 `medicine-h5` 关键字过滤。
+
+### 13.6 新的一键重启姿势
+
+部署脚本 `script/deploy_restart_medical_project.python` 已新增两条捷径：
+
+```bash
+# 日常 git pull 后，一键 pull + 重启 Server/Business/Client + 修权限 + 落地 curl 验证
+python3 MZOneStopMedicalCareDocument/script/deploy_restart_medical_project.python --restart-all
+
+# 首次上线或改过 Nginx/Gateway 路由时，跑完整流程（含 Nginx 同步 / Gateway 路由 / root 初始化）
+python3 MZOneStopMedicalCareDocument/script/deploy_restart_medical_project.python --all
+```
+
+`--restart-all` 内置的步骤（`pull` → `server` → `business` → `client` → `perms` → `verify`）已经把 13.1–13.2 的权限坑和 13.4 的验证 curl 自动化。若改动了 `nginx/medicine.conf` 或 Gateway 路由，需要跑一次 `--all` 或 `--steps nginx gateway`。
 
 ---
 

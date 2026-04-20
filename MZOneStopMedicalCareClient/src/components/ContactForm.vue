@@ -1,44 +1,42 @@
 <template>
   <form class="bg-white rounded-3xl p-8 shadow-2xl" @submit.prevent="onSubmit">
-    <h3 class="font-serif text-2xl font-bold text-medical-800">Get a Free Consultation</h3>
-    <p class="mt-1 text-sm text-medical-500">
-      Share a few details and our care team will reach out within 24 hours.
-    </p>
+    <h3 class="font-serif text-2xl font-bold text-medical-800">{{ t('contact.title') }}</h3>
+    <p class="mt-1 text-sm text-medical-500">{{ t('contact.subtitle') }}</p>
 
     <div class="mt-6 grid grid-cols-1 md:grid-cols-2 gap-4">
       <label class="field">
-        <span>First Name</span>
-        <input v-model="form.firstName" type="text" required placeholder="John" />
+        <span>{{ t('contact.firstName') }}</span>
+        <input v-model="form.firstName" type="text" required :placeholder="t('contact.firstNamePlaceholder')" />
       </label>
       <label class="field">
-        <span>Last Name</span>
-        <input v-model="form.lastName" type="text" required placeholder="Doe" />
+        <span>{{ t('contact.lastName') }}</span>
+        <input v-model="form.lastName" type="text" required :placeholder="t('contact.lastNamePlaceholder')" />
       </label>
       <label class="field md:col-span-2">
-        <span>Email Address</span>
-        <input v-model="form.email" type="email" required placeholder="you@example.com" />
+        <span>{{ t('contact.email') }}</span>
+        <input v-model="form.email" type="email" required :placeholder="t('contact.emailPlaceholder')" />
       </label>
       <label class="field md:col-span-2">
-        <span>Phone Number</span>
-        <input v-model="form.phone" type="tel" required placeholder="+1 (555) 000-0000" />
+        <span>{{ t('contact.phone') }}</span>
+        <input v-model="form.phone" type="tel" required :placeholder="t('contact.phonePlaceholder')" />
       </label>
       <label class="field md:col-span-2">
-        <span>Country</span>
-        <input v-model="form.country" type="text" placeholder="United States" />
+        <span>{{ t('contact.country') }}</span>
+        <input v-model="form.country" type="text" :placeholder="t('contact.countryPlaceholder')" />
       </label>
       <label class="field md:col-span-2">
-        <span>Medical Interest</span>
+        <span>{{ t('contact.medicalInterest') }}</span>
         <select v-model="form.medicalInterest">
-          <option value="">Select a service</option>
-          <option v-for="item in INTERESTS" :key="item" :value="item">{{ item }}</option>
+          <option value="">{{ t('contact.medicalInterestPlaceholder') }}</option>
+          <option v-for="item in INTERESTS" :key="item.value" :value="item.value">{{ item.label }}</option>
         </select>
       </label>
       <label class="field md:col-span-2">
-        <span>Tell us about your medical needs</span>
+        <span>{{ t('contact.message') }}</span>
         <textarea
           v-model="form.message"
           rows="3"
-          placeholder="Briefly describe your situation, timeline, and any questions."
+          :placeholder="t('contact.messagePlaceholder')"
         ></textarea>
       </label>
     </div>
@@ -48,33 +46,36 @@
       type="submit"
       :disabled="submitting || submitted"
     >
-      <span v-if="submitted"><i class="fa-solid fa-check mr-2"></i>Request received</span>
-      <span v-else-if="submitting">Sending…</span>
-      <span v-else>Request Free Consultation</span>
+      <span v-if="submitted"><i class="fa-solid fa-check mr-2"></i>{{ t('contact.submitted') }}</span>
+      <span v-else-if="submitting">{{ t('contact.submitting') }}</span>
+      <span v-else>{{ t('contact.submit') }}</span>
     </button>
 
     <p v-if="error" class="mt-3 text-sm text-rose-600">{{ error }}</p>
     <p v-else-if="submitted" class="mt-3 text-sm text-emerald-600">
-      Thanks! We'll be in touch within 24 hours.
+      {{ t('contact.success') }}
     </p>
     <p v-else class="mt-3 text-xs text-medical-400">
-      By submitting, you agree to be contacted by CareBridgeChina. We don't share your data.
+      {{ t('contact.disclaimer') }}
     </p>
   </form>
 </template>
 
 <script setup lang="ts">
-import { reactive, ref } from 'vue';
+import { computed, reactive, ref } from 'vue';
+import { useI18n } from 'vue-i18n';
 import { submitLead } from '@/api/modules/lead';
 
-const INTERESTS = [
-  'Health Screening',
-  'Dentistry',
-  'Cosmetic Surgery',
-  'Traditional Chinese Medicine',
-  'CAR-T Cell Therapy',
-  'Advanced Treatments'
-];
+const { t } = useI18n();
+
+const INTERESTS = computed(() => [
+  { value: 'Health Screening', label: t('services.healthScreening') },
+  { value: 'Dentistry', label: t('services.dentistry') },
+  { value: 'Cosmetic Surgery', label: t('services.cosmetic') },
+  { value: 'Traditional Chinese Medicine', label: t('services.tcm') },
+  { value: 'CAR-T Cell Therapy', label: t('services.carT') },
+  { value: 'Advanced Treatments', label: t('services.advanced') }
+]);
 
 const form = reactive({
   firstName: '',
@@ -97,7 +98,7 @@ async function onSubmit() {
     await submitLead({ ...form });
     submitted.value = true;
   } catch (e) {
-    error.value = (e as Error).message || 'Something went wrong, please try again.';
+    error.value = (e as Error).message || t('contact.genericError');
   } finally {
     submitting.value = false;
   }

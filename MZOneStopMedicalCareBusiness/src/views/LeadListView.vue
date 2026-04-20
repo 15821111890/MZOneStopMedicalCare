@@ -2,13 +2,13 @@
   <section class="page">
     <header class="head">
       <div>
-        <h1 class="page-title">Leads</h1>
-        <p class="sub">C 端提交的意向客户信息</p>
+        <h1 class="page-title">{{ t('leadList.title') }}</h1>
+        <p class="sub">{{ t('leadList.subtitle') }}</p>
       </div>
       <div class="stats">
         <div class="stat">
           <div class="stat-value">{{ total }}</div>
-          <div class="stat-label">Total Leads</div>
+          <div class="stat-label">{{ t('leadList.totalLeads') }}</div>
         </div>
       </div>
     </header>
@@ -18,59 +18,59 @@
         v-model="keyword"
         class="input"
         type="text"
-        placeholder="Search by name, email, phone, country, message…"
+        :placeholder="t('leadList.searchPlaceholder')"
         @keyup.enter="search(1)"
       />
       <select v-model="medicalInterest" class="select" @change="search(1)">
-        <option value="">All medical interests</option>
-        <option v-for="item in INTERESTS" :key="item" :value="item">{{ item }}</option>
+        <option value="">{{ t('leadList.allInterests') }}</option>
+        <option v-for="item in INTERESTS" :key="item.value" :value="item.value">{{ item.label }}</option>
       </select>
-      <button class="btn btn-primary" @click="search(1)">Search</button>
-      <button class="btn btn-ghost" @click="reset">Reset</button>
+      <button class="btn btn-primary" @click="search(1)">{{ t('leadList.search') }}</button>
+      <button class="btn btn-ghost" @click="reset">{{ t('leadList.reset') }}</button>
     </div>
 
     <div class="card table-card">
       <table class="table">
         <thead>
           <tr>
-            <th>Submitted</th>
-            <th>Name</th>
-            <th>Email</th>
-            <th>Phone</th>
-            <th>Country</th>
-            <th>Interest</th>
-            <th>Status</th>
+            <th>{{ t('leadList.colSubmitted') }}</th>
+            <th>{{ t('leadList.colName') }}</th>
+            <th>{{ t('leadList.colEmail') }}</th>
+            <th>{{ t('leadList.colPhone') }}</th>
+            <th>{{ t('leadList.colCountry') }}</th>
+            <th>{{ t('leadList.colInterest') }}</th>
+            <th>{{ t('leadList.colStatus') }}</th>
             <th></th>
           </tr>
         </thead>
         <tbody>
           <tr v-if="loading">
-            <td colspan="8" class="empty">Loading…</td>
+            <td colspan="8" class="empty">{{ t('common.loading') }}</td>
           </tr>
           <tr v-else-if="items.length === 0">
-            <td colspan="8" class="empty">No leads yet.</td>
+            <td colspan="8" class="empty">{{ t('leadList.empty') }}</td>
           </tr>
           <tr v-else v-for="row in items" :key="row.leadId">
             <td>{{ formatDateTime(row.createdAt) }}</td>
-            <td>{{ row.fullName || '—' }}</td>
-            <td>{{ row.email || '—' }}</td>
-            <td>{{ row.phone || '—' }}</td>
-            <td>{{ row.country || '—' }}</td>
-            <td>{{ row.medicalInterest || '—' }}</td>
+            <td>{{ row.fullName || t('common.dash') }}</td>
+            <td>{{ row.email || t('common.dash') }}</td>
+            <td>{{ row.phone || t('common.dash') }}</td>
+            <td>{{ row.country || t('common.dash') }}</td>
+            <td>{{ row.medicalInterest ? t(interestI18nKey(row.medicalInterest)) : t('common.dash') }}</td>
             <td>
-              <span class="badge" :class="statusClass(row.status)">{{ leadStatusLabel(row.status) }}</span>
+              <span class="badge" :class="statusClass(row.status)">{{ t(leadStatusI18nKey(row.status)) }}</span>
             </td>
             <td>
-              <RouterLink class="link" :to="`/leads/${row.leadId}`">View</RouterLink>
+              <RouterLink class="link" :to="`/leads/${row.leadId}`">{{ t('leadList.view') }}</RouterLink>
             </td>
           </tr>
         </tbody>
       </table>
 
       <div class="pager">
-        <button class="btn btn-ghost" :disabled="page <= 1" @click="search(page - 1)">Prev</button>
-        <span class="pager-info">Page {{ page }} / {{ totalPages }}</span>
-        <button class="btn btn-ghost" :disabled="page >= totalPages" @click="search(page + 1)">Next</button>
+        <button class="btn btn-ghost" :disabled="page <= 1" @click="search(page - 1)">{{ t('leadList.pagePrev') }}</button>
+        <span class="pager-info">{{ t('leadList.pageInfo', { page, total: totalPages }) }}</span>
+        <button class="btn btn-ghost" :disabled="page >= totalPages" @click="search(page + 1)">{{ t('leadList.pageNext') }}</button>
       </div>
     </div>
   </section>
@@ -79,17 +79,20 @@
 <script setup lang="ts">
 import { computed, onMounted, ref } from 'vue';
 import { RouterLink } from 'vue-router';
+import { useI18n } from 'vue-i18n';
 import { listLeads, type Lead } from '@/api/modules/lead';
-import { formatDateTime, leadStatusLabel } from '@/utils/format';
+import { formatDateTime, interestI18nKey, leadStatusI18nKey } from '@/utils/format';
 
-const INTERESTS = [
-  'Health Screening',
-  'Dentistry',
-  'Cosmetic Surgery',
-  'Traditional Chinese Medicine',
-  'CAR-T Cell Therapy',
-  'Advanced Treatments'
-];
+const { t } = useI18n();
+
+const INTERESTS = computed(() => [
+  { value: 'Health Screening', label: t('interests.Health Screening') },
+  { value: 'Dentistry', label: t('interests.Dentistry') },
+  { value: 'Cosmetic Surgery', label: t('interests.Cosmetic Surgery') },
+  { value: 'Traditional Chinese Medicine', label: t('interests.Traditional Chinese Medicine') },
+  { value: 'CAR-T Cell Therapy', label: t('interests.CAR-T Cell Therapy') },
+  { value: 'Advanced Treatments', label: t('interests.Advanced Treatments') }
+]);
 
 const keyword = ref('');
 const medicalInterest = ref('');

@@ -8,3 +8,5 @@ logs/
 .idea/
 .vscode/
 .claude/
+__pycache__/
+*.pyc

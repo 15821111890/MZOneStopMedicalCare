@@ -3,20 +3,25 @@
     <aside class="sidebar">
       <div class="brand">
         <span class="brand-badge">C</span>
-        <span class="brand-name">CareBridge<span class="brand-accent">China</span></span>
-        <span class="brand-sub">Admin</span>
+        <span class="brand-name">
+          {{ t('common.brandPrefix') }}<span class="brand-accent">{{ t('common.brandSuffix') }}</span>
+        </span>
+        <span class="brand-sub">{{ t('common.adminSub') }}</span>
       </div>
       <nav class="nav">
         <RouterLink to="/leads" class="nav-link" active-class="active">
-          <span class="dot" /> Leads
+          <span class="dot" /> {{ t('nav.leads') }}
         </RouterLink>
       </nav>
       <div class="sidebar-footer">
+        <LangSwitch dark />
         <div class="user">
           <div class="user-name">{{ auth.profile?.nickName || auth.profile?.account }}</div>
-          <div class="user-role">{{ auth.profile?.roleType === 1 ? 'Administrator' : 'Member' }}</div>
+          <div class="user-role">
+            {{ auth.profile?.roleType === 1 ? t('common.administrator') : t('common.member') }}
+          </div>
         </div>
-        <button class="btn btn-ghost logout" @click="onLogout">Log out</button>
+        <button class="btn btn-ghost logout" @click="onLogout">{{ t('common.logout') }}</button>
       </div>
     </aside>
     <main class="content">
@@ -28,10 +33,13 @@
 <script setup lang="ts">
 import { onMounted } from 'vue';
 import { RouterLink, RouterView, useRouter } from 'vue-router';
+import { useI18n } from 'vue-i18n';
 import { useAuthStore } from '@/stores/auth';
+import LangSwitch from '@/components/LangSwitch.vue';
 
 const auth = useAuthStore();
 const router = useRouter();
+const { t } = useI18n();
 
 onMounted(() => {
   if (auth.memberToken && !auth.profile) {
@@ -131,6 +139,7 @@ async function onLogout() {
   display: flex;
   flex-direction: column;
   gap: 12px;
+  align-items: flex-start;
 }
 
 .user-name {
@@ -145,6 +154,7 @@ async function onLogout() {
   background: transparent;
   border-color: rgba(255, 255, 255, 0.18);
   color: #fff;
+  width: 100%;
 }
 
 .logout:hover {

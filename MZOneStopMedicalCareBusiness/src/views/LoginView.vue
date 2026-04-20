@@ -1,16 +1,21 @@
 <template>
   <div class="login-page">
+    <div class="lang-slot">
+      <LangSwitch />
+    </div>
     <div class="panel card">
       <div class="brand">
         <span class="brand-badge">C</span>
-        <span class="brand-text">CareBridge<span class="accent">China</span></span>
+        <span class="brand-text">
+          {{ t('common.brandPrefix') }}<span class="accent">{{ t('common.brandSuffix') }}</span>
+        </span>
       </div>
-      <h1 class="page-title">Admin Sign In</h1>
-      <p class="hint">管理员账号登录</p>
+      <h1 class="page-title">{{ t('login.title') }}</h1>
+      <p class="hint">{{ t('login.hint') }}</p>
 
       <form class="form" @submit.prevent="onSubmit">
         <label class="field">
-          <span class="field-label">Account</span>
+          <span class="field-label">{{ t('login.account') }}</span>
           <input
             v-model="account"
             class="input"
@@ -21,7 +26,7 @@
           />
         </label>
         <label class="field">
-          <span class="field-label">Password</span>
+          <span class="field-label">{{ t('login.password') }}</span>
           <input
             v-model="password"
             class="input"
@@ -34,7 +39,7 @@
         <div v-if="error" class="error">{{ error }}</div>
 
         <button class="btn btn-primary submit" type="submit" :disabled="loading">
-          {{ loading ? 'Signing in…' : 'Sign In' }}
+          {{ loading ? t('login.submitting') : t('login.submit') }}
         </button>
       </form>
     </div>
@@ -44,8 +49,12 @@
 <script setup lang="ts">
 import { ref } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
+import { useI18n } from 'vue-i18n';
 import { useAuthStore } from '@/stores/auth';
 import { md5Hash } from '@/utils/md5';
+import LangSwitch from '@/components/LangSwitch.vue';
+
+const { t } = useI18n();
 
 const account = ref('');
 const password = ref('');
@@ -64,7 +73,7 @@ async function onSubmit() {
     const redirect = (route.query.redirect as string) || '/leads';
     router.push(redirect);
   } catch (e) {
-    const msg = (e as Error).message || '登录失败';
+    const msg = (e as Error).message || t('login.defaultError');
     error.value = msg;
   } finally {
     loading.value = false;
@@ -74,6 +83,7 @@ async function onSubmit() {
 
 <style scoped>
 .login-page {
+  position: relative;
   min-height: 100vh;
   background:
     radial-gradient(1200px 600px at 10% -10%, rgba(14, 165, 233, 0.18), transparent 60%),
@@ -82,6 +92,12 @@ async function onSubmit() {
   display: grid;
   place-items: center;
   padding: 40px 20px;
+}
+
+.lang-slot {
+  position: absolute;
+  top: 24px;
+  right: 28px;
 }
 
 .panel {

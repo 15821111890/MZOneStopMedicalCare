@@ -1,45 +1,45 @@
 <template>
   <section class="page">
     <header class="head">
-      <RouterLink to="/leads" class="back">← Back to leads</RouterLink>
-      <h1 class="page-title">Lead Detail</h1>
+      <RouterLink to="/leads" class="back">{{ t('leadDetail.back') }}</RouterLink>
+      <h1 class="page-title">{{ t('leadDetail.title') }}</h1>
     </header>
 
-    <div v-if="loading" class="card empty">Loading…</div>
-    <div v-else-if="!lead" class="card empty">Lead not found.</div>
+    <div v-if="loading" class="card empty">{{ t('common.loading') }}</div>
+    <div v-else-if="!lead" class="card empty">{{ t('leadDetail.notFound') }}</div>
     <div v-else class="grid">
       <section class="card profile">
         <div class="avatar">{{ initials }}</div>
-        <div class="name">{{ lead.fullName || '(no name)' }}</div>
-        <div class="meta">Submitted {{ formatDateTime(lead.createdAt) }}</div>
+        <div class="name">{{ lead.fullName || t('leadDetail.noName') }}</div>
+        <div class="meta">{{ t('leadDetail.submittedAt', { time: formatDateTime(lead.createdAt) }) }}</div>
         <span class="badge" :class="statusClass(lead.status)">
-          {{ leadStatusLabel(lead.status) }}
+          {{ t(leadStatusI18nKey(lead.status)) }}
         </span>
         <div class="actions">
           <button class="btn btn-primary" :disabled="saving || lead.status === 1" @click="setStatus(1)">
-            Mark contacted
+            {{ t('leadDetail.markContacted') }}
           </button>
           <button class="btn btn-ghost" :disabled="saving || lead.status === 2" @click="setStatus(2)">
-            Close
+            {{ t('leadDetail.close') }}
           </button>
           <button class="btn btn-ghost" :disabled="saving || lead.status === 0" @click="setStatus(0)">
-            Reopen
+            {{ t('leadDetail.reopen') }}
           </button>
         </div>
       </section>
 
       <section class="card info">
-        <h2 class="section-title">Contact</h2>
+        <h2 class="section-title">{{ t('leadDetail.contactSection') }}</h2>
         <dl class="dl">
-          <div><dt>Email</dt><dd>{{ lead.email || '—' }}</dd></div>
-          <div><dt>Phone</dt><dd>{{ lead.phone || '—' }}</dd></div>
-          <div><dt>Country</dt><dd>{{ lead.country || '—' }}</dd></div>
-          <div><dt>Medical Interest</dt><dd>{{ lead.medicalInterest || '—' }}</dd></div>
-          <div><dt>Source</dt><dd>{{ lead.source || '—' }}</dd></div>
+          <div><dt>{{ t('leadDetail.email') }}</dt><dd>{{ lead.email || t('common.dash') }}</dd></div>
+          <div><dt>{{ t('leadDetail.phone') }}</dt><dd>{{ lead.phone || t('common.dash') }}</dd></div>
+          <div><dt>{{ t('leadDetail.country') }}</dt><dd>{{ lead.country || t('common.dash') }}</dd></div>
+          <div><dt>{{ t('leadDetail.interest') }}</dt><dd>{{ lead.medicalInterest ? t(interestI18nKey(lead.medicalInterest)) : t('common.dash') }}</dd></div>
+          <div><dt>{{ t('leadDetail.source') }}</dt><dd>{{ lead.source || t('common.dash') }}</dd></div>
         </dl>
 
-        <h2 class="section-title">Message</h2>
-        <p class="message">{{ lead.message || '(no message)' }}</p>
+        <h2 class="section-title">{{ t('leadDetail.messageSection') }}</h2>
+        <p class="message">{{ lead.message || t('leadDetail.noMessage') }}</p>
       </section>
     </div>
   </section>
@@ -48,8 +48,11 @@
 <script setup lang="ts">
 import { computed, onMounted, ref } from 'vue';
 import { RouterLink, useRoute } from 'vue-router';
+import { useI18n } from 'vue-i18n';
 import { getLead, updateLead, type Lead } from '@/api/modules/lead';
-import { formatDateTime, leadStatusLabel } from '@/utils/format';
+import { formatDateTime, interestI18nKey, leadStatusI18nKey } from '@/utils/format';
+
+const { t } = useI18n();
 
 const route = useRoute();
 const lead = ref<Lead | null>(null);

@@ -6,15 +6,19 @@ export function formatDateTime(value: string | Date): string {
   return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())} ${pad(d.getHours())}:${pad(d.getMinutes())}`;
 }
 
-export function leadStatusLabel(status: number): string {
+export function leadStatusI18nKey(status: number): string {
   switch (status) {
     case 0:
-      return 'New';
+      return 'status.new';
     case 1:
-      return 'Contacted';
+      return 'status.contacted';
     case 2:
-      return 'Closed';
+      return 'status.closed';
     default:
-      return 'Unknown';
+      return 'status.unknown';
   }
+}
+
+export function interestI18nKey(value: string): string {
+  return value ? `interests.${value}` : '';
 }
