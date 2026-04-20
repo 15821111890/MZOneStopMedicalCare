@@ -1,0 +1,376 @@
+<!DOCTYPE html><html lang="en"><head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Why China | CareBridgeChina</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&amp;family=Inter:wght@300;400;500;600&amp;display=swap" rel="stylesheet"/>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.0.0/js/all.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.0.0/css/all.min.css"/>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: { 50: '#f0f9ff', 100: '#e0f2fe', 500: '#0ea5e9', 600: '#0284c7', 700: '#0369a1', 900: '#0c4a6e' },
+                        secondary: { 50: '#f5f3ff', 100: '#ede9fe', 500: '#8b5cf6', 600: '#7c3aed', 700: '#6d28d9' },
+                        accent: { 50: '#fff7ed', 100: '#ffedd5', 500: '#f97316', 600: '#ea580c' },
+                        medical: { 50: '#f8fafc', 100: '#f1f5f9', 800: '#1e293b', 900: '#0f172a' }
+                    },
+                    fontFamily: {
+                        serif: ['Playfair Display', 'serif'],
+                        sans: ['Inter', 'sans-serif']
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        .glass-effect { background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(10px); }
+        .gradient-text { background: linear-gradient(135deg, #0284c7 0%, #7c3aed 50%, #ea580c 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .scroll-reveal { opacity: 0; transform: translateY(30px); transition: all 0.8s ease; }
+        .scroll-reveal.active { opacity: 1; transform: translateY(0); }
+    </style>
+<script src="https://www.kimi.com/sdk-seed.js" defer=""></script></head>
+<body class="font-sans text-medical-800 antialiased bg-medical-50">
+
+    <!-- Navigation -->
+    <nav class="fixed w-full z-50 glass-effect border-b border-gray-200/50" id="navbar">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-20">
+                <a href="index.html" class="flex items-center space-x-3">
+                    <div class="w-10 h-10 bg-gradient-to-br from-primary-600 to-secondary-600 rounded-lg flex items-center justify-center text-white font-bold text-xl">C</div>
+                    <span class="font-serif text-2xl font-bold text-medical-900">CareBridge<span class="text-primary-600">China</span></span>
+                </a>
+                <div class="hidden md:flex space-x-6 items-center">
+                    <a href="index.html" class="text-gray-600 hover:text-primary-600 font-medium transition">Home Page</a>
+                    <a href="homepage.html" class="text-gray-600 hover:text-primary-600 font-medium transition">About Us</a>
+                    <div class="dropdown relative">
+                        <button class="text-gray-600 hover:text-primary-600 font-medium transition flex items-center">
+                            Services
+                            <i class="fas fa-chevron-down ml-1 text-xs"></i>
+                        </button>
+                        <div class="dropdown-menu hidden absolute top-full left-0 mt-2 w-64 bg-white rounded-xl shadow-xl border border-gray-100 py-2">
+                            <a href="health-screening.html" class="block px-4 py-3 hover:bg-primary-50 text-gray-700 hover:text-primary-600 transition"><i class="fas fa-stethoscope w-6"></i>Health Screening</a>
+                            <a href="dentistry.html" class="block px-4 py-3 hover:bg-primary-50 text-gray-700 hover:text-primary-600 transition"><i class="fas fa-tooth w-6"></i>Dentistry</a>
+                            <a href="cosmetic-surgery.html" class="block px-4 py-3 hover:bg-primary-50 text-gray-700 hover:text-primary-600 transition"><i class="fas fa-user-md w-6"></i>Cosmetic &amp; Plastic Surgery</a>
+                            <a href="tcm.html" class="block px-4 py-3 hover:bg-primary-50 text-gray-700 hover:text-primary-600 transition"><i class="fas fa-yin-yang w-6"></i>Traditional Chinese Medicine</a>
+                            <a href="car-t-therapy.html" class="block px-4 py-3 hover:bg-primary-50 text-gray-700 hover:text-primary-600 transition"><i class="fas fa-dna w-6"></i>CAR-T Cell Therapy</a>
+                            <a href="advanced-treatment.html" class="block px-4 py-3 hover:bg-primary-50 text-gray-700 hover:text-primary-600 transition"><i class="fas fa-heartbeat w-6"></i>Other Advanced Treatment</a>
+                        </div>
+                    </div>
+                    <a href="why-china.html" class="text-primary-600 font-medium transition">Why China</a>
+                    <a href="explore-china.html" class="text-gray-600 hover:text-primary-600 font-medium transition">Explore China</a>
+                    <a href="medical-journey.html" class="text-gray-600 hover:text-primary-600 font-medium transition">Your Journey</a>
+                    <a href="index.html#contact" class="px-6 py-2 bg-primary-600 text-white rounded-full font-medium hover:bg-primary-700 transition">Contact Us</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="relative pt-32 pb-20 lg:pt-40 lg:pb-32 bg-gradient-to-br from-primary-50 via-white to-secondary-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid lg:grid-cols-2 gap-12 items-center">
+                <div class="scroll-reveal">
+                    <div class="inline-flex items-center px-4 py-2 rounded-full bg-primary-100 text-primary-700 text-sm font-semibold mb-6">
+                        <i class="fas fa-globe-asia mr-2"></i>
+                        Asia&#39;s Medical Hub
+                    </div>
+                    <h1 class="font-serif text-5xl lg:text-6xl font-bold text-medical-900 leading-tight mb-6">
+                        Why Choose<br/><span class="gradient-text">China?</span>
+                    </h1>
+                    <p class="text-xl text-gray-600 mb-8 leading-relaxed">
+                        As a rising global leader in healthcare, China offers an unmatched combination of world-class medical expertise, cutting-edge technology, and exceptional value.
+                    </p>
+                    <div class="flex flex-col sm:flex-row gap-4">
+                        <a href="index.html#contact" class="px-8 py-4 bg-primary-600 text-white rounded-full font-semibold text-lg hover:bg-primary-700 transition shadow-lg text-center">
+                            Start Your Journey
+                        </a>
+                        <a href="#advantages" class="px-8 py-4 border-2 border-primary-600 text-primary-700 rounded-full font-semibold text-lg hover:bg-primary-50 transition text-center">
+                            Learn More
+                        </a>
+                    </div>
+                </div>
+                <div class="relative scroll-reveal">
+                    <img src="https://images.unsplash.com/photo-1474181487882-5abf3f0ba6c2?w=800" alt="Shanghai" class="rounded-3xl shadow-2xl w-full object-cover h-[450px]"/>
+                    <div class="absolute -bottom-6 -left-6 bg-white p-6 rounded-2xl shadow-xl">
+                        <div class="text-3xl font-bold text-primary-600">100+</div>
+                        <div class="text-sm text-gray-500">JCI Hospitals</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Four Pillars Section -->
+    <section id="advantages" class="py-24 bg-white">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-16 scroll-reveal">
+                <h2 class="font-serif text-4xl font-bold text-medical-900 mb-4">Four Compelling Reasons</h2>
+                <p class="text-xl text-gray-600">Why patients from around the world choose China for medical care</p>
+            </div>
+
+            <div class="grid md:grid-cols-2 gap-8">
+                <!-- Exceptional Value -->
+                <div class="bg-gradient-to-br from-teal-500 to-teal-600 rounded-3xl p-8 text-white scroll-reveal">
+                    <div class="flex items-center gap-4 mb-6">
+                        <div class="w-14 h-14 bg-white/20 rounded-2xl flex items-center justify-center">
+                            <i class="fas fa-dollar-sign text-3xl"></i>
+                        </div>
+                        <h3 class="text-2xl font-bold">Exceptional Value</h3>
+                    </div>
+                    <p class="text-lg leading-relaxed mb-6">Save 60-90% on world-class medical procedures without compromising quality. China&#39;s healthcare costs are a fraction of Western prices.</p>
+                    <div class="space-y-3">
+                        <div class="bg-white/20 rounded-xl p-4">
+                            <div class="flex justify-between items-center">
+                                <span class="font-semibold">Heart Checkup</span>
+                                <span class="text-2xl font-black">$75</span>
+                            </div>
+                            <div class="text-sm opacity-80">vs $10,000-20,000 in the US</div>
+                        </div>
+                        <div class="bg-white/20 rounded-xl p-4">
+                            <div class="flex justify-between items-center">
+                                <span class="font-semibold">Dental Implants</span>
+                                <span class="text-2xl font-black">$890</span>
+                            </div>
+                            <div class="text-sm opacity-80">vs $4,500 in the US</div>
+                        </div>
+                        <div class="bg-white/20 rounded-xl p-4">
+                            <div class="flex justify-between items-center">
+                                <span class="font-semibold">MRI Scan</span>
+                                <span class="text-2xl font-black">$150</span>
+                            </div>
+                            <div class="text-sm opacity-80">vs $1,500-3,000 in the US</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Immediate Access -->
+                <div class="bg-gradient-to-br from-emerald-500 to-emerald-600 rounded-3xl p-8 text-white scroll-reveal">
+                    <div class="flex items-center gap-4 mb-6">
+                        <div class="w-14 h-14 bg-white/20 rounded-2xl flex items-center justify-center">
+                            <i class="fas fa-clock text-3xl"></i>
+                        </div>
+                        <h3 class="text-2xl font-bold">Immediate Access</h3>
+                    </div>
+                    <p class="text-lg leading-relaxed mb-6">No waiting lists. Get same-day consultations, imaging, and procedures. Time is critical in healthcare.</p>
+                    <div class="space-y-3">
+                        <div class="flex items-start gap-3">
+                            <i class="fas fa-check-circle text-xl mt-1"></i>
+                            <div>
+                                <h4 class="font-bold">Same-Day Consultations</h4>
+                                <p class="text-sm opacity-90">See specialists within hours, not months</p>
+                            </div>
+                        </div>
+                        <div class="flex items-start gap-3">
+                            <i class="fas fa-check-circle text-xl mt-1"></i>
+                            <div>
+                                <h4 class="font-bold">Instant Imaging</h4>
+                                <p class="text-sm opacity-90">MRI, CT, PET-CT available same day</p>
+                            </div>
+                        </div>
+                        <div class="flex items-start gap-3">
+                            <i class="fas fa-check-circle text-xl mt-1"></i>
+                            <div>
+                                <h4 class="font-bold">24-Hour Results</h4>
+                                <p class="text-sm opacity-90">Get your diagnostic reports next day</p>
+                            </div>
+                        </div>
+                        <div class="flex items-start gap-3">
+                            <i class="fas fa-check-circle text-xl mt-1"></i>
+                            <div>
+                                <h4 class="font-bold">Flexible Scheduling</h4>
+                                <p class="text-sm opacity-90">Surgeries scheduled within 1-2 weeks</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Medical Innovation -->
+                <div class="bg-gradient-to-br from-cyan-500 to-cyan-600 rounded-3xl p-8 text-white scroll-reveal">
+                    <div class="flex items-center gap-4 mb-6">
+                        <div class="w-14 h-14 bg-white/20 rounded-2xl flex items-center justify-center">
+                            <i class="fas fa-microscope text-3xl"></i>
+                        </div>
+                        <h3 class="text-2xl font-bold">Medical Innovation Leader</h3>
+                    </div>
+                    <p class="text-lg leading-relaxed mb-6">China is at the forefront of medical research and technology, especially in cutting-edge treatments.</p>
+                    <div class="grid grid-cols-2 gap-3">
+                        <div class="bg-white/20 rounded-xl p-4 text-center">
+                            <div class="text-4xl font-black mb-1">337+</div>
+                            <div class="text-sm">CAR-T Clinical Trials</div>
+                        </div>
+                        <div class="bg-white/20 rounded-xl p-4 text-center">
+                            <div class="text-4xl font-black mb-1">80%</div>
+                            <div class="text-sm">Remission Rates</div>
+                        </div>
+                        <div class="bg-white/20 rounded-xl p-4 text-center">
+                            <div class="text-4xl font-black mb-1">100+</div>
+                            <div class="text-sm">JCI Hospitals</div>
+                        </div>
+                        <div class="bg-white/20 rounded-xl p-4 text-center">
+                            <div class="text-4xl font-black mb-1">Top 3</div>
+                            <div class="text-sm">Global Research</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- World-Class Facilities -->
+                <div class="bg-gradient-to-br from-violet-500 to-violet-600 rounded-3xl p-8 text-white scroll-reveal">
+                    <div class="flex items-center gap-4 mb-6">
+                        <div class="w-14 h-14 bg-white/20 rounded-2xl flex items-center justify-center">
+                            <i class="fas fa-hospital text-3xl"></i>
+                        </div>
+                        <h3 class="text-2xl font-bold">World-Class Facilities</h3>
+                    </div>
+                    <p class="text-lg leading-relaxed mb-6">Over 100 JCI-accredited hospitals with state-of-the-art equipment and internationally trained doctors.</p>
+                    <div class="space-y-3">
+                        <div class="flex items-start gap-3">
+                            <i class="fas fa-certificate text-xl mt-1"></i>
+                            <div>
+                                <h4 class="font-bold">JCI Accreditation</h4>
+                                <p class="text-sm opacity-90">Gold standard for healthcare quality</p>
+                            </div>
+                        </div>
+                        <div class="flex items-start gap-3">
+                            <i class="fas fa-robot text-xl mt-1"></i>
+                            <div>
+                                <h4 class="font-bold">Robotic Surgery</h4>
+                                <p class="text-sm opacity-90">Da Vinci systems in top hospitals</p>
+                            </div>
+                        </div>
+                        <div class="flex items-start gap-3">
+                            <i class="fas fa-brain text-xl mt-1"></i>
+                            <div>
+                                <h4 class="font-bold">AI Diagnostics</h4>
+                                <p class="text-sm opacity-90">Machine learning for accurate detection</p>
+                            </div>
+                        </div>
+                        <div class="flex items-start gap-3">
+                            <i class="fas fa-user-md text-xl mt-1"></i>
+                            <div>
+                                <h4 class="font-bold">International Doctors</h4>
+                                <p class="text-sm opacity-90">Trained in US, Europe, and Japan</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Shanghai Section -->
+    <section class="py-24 bg-gradient-to-br from-primary-50 via-white to-secondary-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid lg:grid-cols-2 gap-12 items-center">
+                <div class="scroll-reveal">
+                    <img src="https://images.unsplash.com/photo-1537531383496-f4749b8032cf?w=800" alt="Shanghai" class="rounded-3xl shadow-2xl w-full object-cover h-[500px]"/>
+                </div>
+                <div class="scroll-reveal">
+                    <h2 class="font-serif text-4xl font-bold text-medical-900 mb-6">Shanghai: Your Medical Destination</h2>
+                    <p class="text-lg text-gray-600 mb-6 leading-relaxed">
+                        As a leading medical hub in Asia, Shanghai boasts an unparalleled concentration of top-tier hospitals and renowned medical specialists, attracting patients from across China and around the globe.
+                    </p>
+                    <p class="text-gray-600 mb-6">
+                        The city is at the forefront of advanced medical treatments, including CAR-T cell therapy and complex surgical procedures. Beyond medical excellence, Shanghai offers efficient access to top-tier treatments with minimal wait and highly accessible pricing.
+                    </p>
+                    <p class="text-gray-600 mb-8">
+                        As a safe, modern metropolis, it lets international patients focus fully on their recovery without distractions. World-class infrastructure, efficient public transportation, and a welcoming environment mean you can focus entirely on your well-being.
+                    </p>
+                    <div class="flex flex-wrap gap-4">
+                        <div class="flex items-center gap-2 px-4 py-2 bg-white rounded-full shadow-sm">
+                            <i class="fas fa-shield-alt text-primary-600"></i>
+                            <span class="text-sm font-medium">Safe &amp; Modern</span>
+                        </div>
+                        <div class="flex items-center gap-2 px-4 py-2 bg-white rounded-full shadow-sm">
+                            <i class="fas fa-subway text-primary-600"></i>
+                            <span class="text-sm font-medium">Efficient Transport</span>
+                        </div>
+                        <div class="flex items-center gap-2 px-4 py-2 bg-white rounded-full shadow-sm">
+                            <i class="fas fa-globe text-primary-600"></i>
+                            <span class="text-sm font-medium">International-Friendly</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Cultural Experience -->
+    <section class="py-24 bg-white">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-16 scroll-reveal">
+                <h2 class="font-serif text-4xl font-bold text-medical-900 mb-4">Turn Healing Into Adventure</h2>
+                <p class="text-xl text-gray-600">Combine world-class healthcare with rich cultural exploration</p>
+            </div>
+
+            <div class="grid md:grid-cols-3 gap-8">
+                <div class="bg-amber-50 p-8 rounded-3xl text-center scroll-reveal">
+                    <div class="w-16 h-16 bg-amber-100 rounded-full flex items-center justify-center mx-auto mb-6">
+                        <i class="fas fa-landmark text-amber-600 text-2xl"></i>
+                    </div>
+                    <h3 class="font-bold text-xl mb-3">Ancient Heritage</h3>
+                    <p class="text-gray-600">Explore 5,000 years of history—from the Great Wall to classical gardens and ancient temples.</p>
+                </div>
+
+                <div class="bg-red-50 p-8 rounded-3xl text-center scroll-reveal">
+                    <div class="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-6">
+                        <i class="fas fa-utensils text-red-600 text-2xl"></i>
+                    </div>
+                    <h3 class="font-bold text-xl mb-3">World-Famous Cuisine</h3>
+                    <p class="text-gray-600">From soup dumplings to Peking duck, experience one of the world&#39;s greatest culinary traditions.</p>
+                </div>
+
+                <div class="bg-purple-50 p-8 rounded-3xl text-center scroll-reveal">
+                    <div class="w-16 h-16 bg-purple-100 rounded-full flex items-center justify-center mx-auto mb-6">
+                        <i class="fas fa-city text-purple-600 text-2xl"></i>
+                    </div>
+                    <h3 class="font-bold text-xl mb-3">Modern Innovation</h3>
+                    <p class="text-gray-600">Witness futuristic skylines, high-speed trains, and cutting-edge technology in action.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="py-24 bg-gradient-to-br from-primary-900 via-secondary-900 to-accent-900 text-white relative overflow-hidden">
+        <div class="absolute inset-0 opacity-10">
+            <div class="absolute inset-0" style="background-image: radial-gradient(circle at 2px 2px, rgba(255,255,255,0.15) 1px, transparent 0); background-size: 40px 40px;"></div>
+        </div>
+        
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center relative scroll-reveal">
+            <h2 class="font-serif text-4xl lg:text-5xl font-bold mb-6">Begin Your Journey to China</h2>
+            <p class="text-xl text-white/80 mb-8">Experience world-class healthcare combined with unforgettable cultural discovery. Your path to wellness starts here.</p>
+            <div class="flex flex-col sm:flex-row gap-4 justify-center">
+                <a href="index.html#contact" class="px-8 py-4 bg-white text-primary-900 rounded-full font-semibold text-lg hover:bg-gray-100 transition shadow-xl">
+                    Get Free Consultation
+                </a>
+                <a href="explore-china.html" class="px-8 py-4 border-2 border-white text-white rounded-full font-semibold text-lg hover:bg-white/10 transition">
+                    Explore China
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-medical-900 text-gray-400 py-12">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex flex-col md:flex-row justify-between items-center">
+                <div class="flex items-center space-x-2 mb-4 md:mb-0">
+                    <div class="w-8 h-8 bg-primary-600 rounded-lg flex items-center justify-center text-white font-bold">C</div>
+                    <span class="font-serif text-xl font-bold text-white">CareBridge<span class="text-primary-500">China</span></span>
+                </div>
+                <div class="text-sm">© 2026 CareBridgeChina. All rights reserved.</div>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => { if (entry.isIntersecting) entry.target.classList.add('active'); });
+        }, { threshold: 0.1 });
+        document.querySelectorAll('.scroll-reveal').forEach((el) => observer.observe(el));
+    </script>
+
+
+</body></html>

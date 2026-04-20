@@ -1,0 +1,303 @@
+#!/usr/bin/env python3
+"""
+deploy_restart_medical_project.py
+
+MZOneStopMedicalCare 一站式部署 / 重启脚本。负责：
+
+1. 拉取 MZOneStopMedicalCare 最新代码（monorepo）
+2. 为 Server / Business / Client 生成缺失的 .env
+3. Server：npm install --production + pm2 启动/重启
+4. Business：npm install + npm run build
+5. Client：npm install + npm run build
+6. 同步 MZGateway routes.json 追加 /api/medicine 路由并 pm2 reload
+7. 校验 Nginx 配置（medicine.conf），必要时 nginx -t 后 reload
+8. 调用 root_admin_initialize.py 确保管理员账号存在
+
+交互式：通过 --all 一键、或不带参数进入交互菜单。
+
+兼容 Python 3.8+，仅使用标准库。依赖：pymongo（执行 root_admin_initialize.py 时）。
+"""
+
+from __future__ import annotations
+
+import argparse
+import json
+import os
+import shutil
+import subprocess
+import sys
+from dataclasses import dataclass
+from pathlib import Path
+from typing import Callable
+
+
+# ---------- 路径约定 ----------
+BASE_DIR = Path(os.environ.get("MEDICAL_BASE_DIR", "/home/ubuntu/apps"))
+MONO_DIR = BASE_DIR / "MZOneStopMedicalCare"
+SERVER_DIR = MONO_DIR / "MZOneStopMedicalCareServer"
+BUSINESS_DIR = MONO_DIR / "MZOneStopMedicalCareBusiness"
+CLIENT_DIR = MONO_DIR / "MZOneStopMedicalCareClient"
+DOCUMENT_DIR = MONO_DIR / "MZOneStopMedicalCareDocument"
+
+GATEWAY_DIR = BASE_DIR / "MZGateway"
+GATEWAY_ROUTES = GATEWAY_DIR / "src" / "config" / "routes.json"
+
+NGINX_SITE_AVAILABLE = Path("/etc/nginx/sites-available/medicine.conf")
+NGINX_SITE_ENABLED = Path("/etc/nginx/sites-enabled/medicine.conf")
+NGINX_TEMPLATE = DOCUMENT_DIR / "nginx" / "medicine.conf"
+
+MEDICINE_ROUTE = {
+    "name": "MZOneStopMedicalCareServer",
+    "prefix": "/api/medicine",
+    "target": "http://127.0.0.1:3003",
+    "stripPrefix": True,
+}
+
+SERVER_PM2_NAME = "mz-medical-server"
+GATEWAY_PM2_NAME = "mz-gateway"
+
+
+# ---------- 小工具 ----------
+def info(msg: str) -> None:
+    print(f"\033[36m[info]\033[0m {msg}")
+
+
+def warn(msg: str) -> None:
+    print(f"\033[33m[warn]\033[0m {msg}")
+
+
+def error(msg: str) -> None:
+    print(f"\033[31m[error]\033[0m {msg}")
+
+
+def run(cmd, cwd: Path | None = None, check: bool = True, capture: bool = False):
+    info("$ " + (" ".join(cmd) if isinstance(cmd, (list, tuple)) else cmd))
+    kwargs = {"cwd": str(cwd) if cwd else None, "shell": isinstance(cmd, str)}
+    if capture:
+        kwargs["capture_output"] = True
+        kwargs["text"] = True
+    result = subprocess.run(cmd, **kwargs)
+    if check and result.returncode != 0:
+        raise SystemExit(f"命令失败：{cmd}")
+    return result
+
+
+def have_cmd(name: str) -> bool:
+    return shutil.which(name) is not None
+
+
+def ensure_env(project_dir: Path) -> None:
+    env_file = project_dir / ".env"
+    example = project_dir / ".env.example"
+    if env_file.exists():
+        info(f".env 已存在：{env_file}")
+        return
+    if example.exists():
+        shutil.copy(example, env_file)
+        warn(f"已从 .env.example 复制 {env_file}，请按实际环境调整")
+    else:
+        warn(f"{project_dir} 没有 .env.example，跳过生成 .env")
+
+
+# ---------- 动作 ----------
+def pull_monorepo() -> None:
+    if not (MONO_DIR / ".git").exists():
+        error(f"{MONO_DIR} 不是 git 工作区，请先 clone")
+        raise SystemExit(2)
+    run(["git", "pull", "--ff-only"], cwd=MONO_DIR)
+
+
+def deploy_server() -> None:
+    if not SERVER_DIR.exists():
+        error(f"未找到 {SERVER_DIR}")
+        return
+    ensure_env(SERVER_DIR)
+    run(["npm", "install", "--production"], cwd=SERVER_DIR)
+    if have_cmd("pm2"):
+        run(["pm2", "describe", SERVER_PM2_NAME], check=False, capture=True)
+        run(
+            [
+                "pm2",
+                "startOrReload",
+                "ecosystem.config.js",
+                "--env",
+                "production",
+            ],
+            cwd=SERVER_DIR,
+        )
+        run(["pm2", "save"], check=False)
+    else:
+        warn("未检测到 pm2，跳过服务启动")
+
+
+def build_vue(project_dir: Path) -> None:
+    if not project_dir.exists():
+        error(f"未找到 {project_dir}")
+        return
+    ensure_env(project_dir)
+    run(["npm", "install"], cwd=project_dir)
+    run(["npm", "run", "build"], cwd=project_dir)
+
+
+def deploy_business() -> None:
+    build_vue(BUSINESS_DIR)
+
+
+def deploy_client() -> None:
+    build_vue(CLIENT_DIR)
+
+
+def sync_gateway_route() -> None:
+    if not GATEWAY_ROUTES.exists():
+        warn(f"未找到 {GATEWAY_ROUTES}，跳过 Gateway 路由同步")
+        return
+    data = json.loads(GATEWAY_ROUTES.read_text(encoding="utf-8"))
+    routes = data.get("routes", [])
+    found = next(
+        (
+            r
+            for r in routes
+            if r.get("prefix") == MEDICINE_ROUTE["prefix"]
+            or r.get("name") == MEDICINE_ROUTE["name"]
+        ),
+        None,
+    )
+    if found is None:
+        routes.append(MEDICINE_ROUTE)
+        data["routes"] = routes
+        GATEWAY_ROUTES.write_text(
+            json.dumps(data, indent=2, ensure_ascii=False) + "\n", encoding="utf-8"
+        )
+        info(f"已在 {GATEWAY_ROUTES} 追加 /api/medicine 路由")
+    else:
+        # 对齐 target / stripPrefix
+        changed = False
+        for key in ("name", "target", "stripPrefix"):
+            if found.get(key) != MEDICINE_ROUTE[key]:
+                found[key] = MEDICINE_ROUTE[key]
+                changed = True
+        if changed:
+            GATEWAY_ROUTES.write_text(
+                json.dumps(data, indent=2, ensure_ascii=False) + "\n", encoding="utf-8"
+            )
+            info("已更新 Gateway 现有 medicine 路由定义")
+        else:
+            info("Gateway 已包含 /api/medicine，跳过写入")
+
+    if have_cmd("pm2"):
+        run(["pm2", "reload", GATEWAY_PM2_NAME], check=False)
+
+
+def sync_nginx() -> None:
+    if not NGINX_TEMPLATE.exists():
+        warn(f"未找到 {NGINX_TEMPLATE}，跳过 Nginx 同步")
+        return
+    try:
+        if not NGINX_SITE_AVAILABLE.exists() or (
+            NGINX_SITE_AVAILABLE.read_text() != NGINX_TEMPLATE.read_text()
+        ):
+            info(f"写入 {NGINX_SITE_AVAILABLE}")
+            subprocess.run(
+                ["sudo", "cp", str(NGINX_TEMPLATE), str(NGINX_SITE_AVAILABLE)],
+                check=True,
+            )
+        if not NGINX_SITE_ENABLED.exists():
+            info(f"启用站点：{NGINX_SITE_ENABLED}")
+            subprocess.run(
+                [
+                    "sudo",
+                    "ln",
+                    "-sf",
+                    str(NGINX_SITE_AVAILABLE),
+                    str(NGINX_SITE_ENABLED),
+                ],
+                check=True,
+            )
+        subprocess.run(["sudo", "nginx", "-t"], check=True)
+        subprocess.run(["sudo", "systemctl", "reload", "nginx"], check=True)
+        info("Nginx 已 reload")
+    except subprocess.CalledProcessError as exc:
+        error(f"Nginx 同步失败：{exc}")
+
+
+def seed_root_admin() -> None:
+    script = DOCUMENT_DIR / "script" / "root_admin_initialize.py"
+    if not script.exists():
+        warn(f"未找到 {script}")
+        return
+    run([sys.executable, str(script)])
+
+
+# ---------- 菜单 ----------
+@dataclass
+class Step:
+    key: str
+    title: str
+    action: Callable[[], None]
+
+
+STEPS: list[Step] = [
+    Step("pull", "Git pull monorepo", pull_monorepo),
+    Step("server", "部署 / 重启 Server (PM2)", deploy_server),
+    Step("business", "构建 Business H5", deploy_business),
+    Step("client", "构建 Client H5", deploy_client),
+    Step("gateway", "同步 Gateway 路由表", sync_gateway_route),
+    Step("nginx", "同步 Nginx 配置", sync_nginx),
+    Step("seed", "初始化 root 管理员", seed_root_admin),
+]
+
+
+def run_steps(keys: list[str]) -> None:
+    for key in keys:
+        step = next((s for s in STEPS if s.key == key), None)
+        if step is None:
+            warn(f"未知步骤：{key}")
+            continue
+        info(f"==== {step.title} ====")
+        step.action()
+    info("Done.")
+
+
+def interactive() -> None:
+    print("请选择要执行的步骤，空格分隔多项，回车确认；直接回车表示全部：")
+    for idx, step in enumerate(STEPS, 1):
+        print(f"  {idx}. [{step.key}] {step.title}")
+    raw = input("> ").strip()
+    if not raw:
+        run_steps([s.key for s in STEPS])
+        return
+    keys: list[str] = []
+    for token in raw.split():
+        if token.isdigit() and 1 <= int(token) <= len(STEPS):
+            keys.append(STEPS[int(token) - 1].key)
+        else:
+            keys.append(token)
+    run_steps(keys)
+
+
+def main() -> None:
+    parser = argparse.ArgumentParser(description="MZOneStopMedicalCare 部署 / 重启脚本")
+    parser.add_argument("--all", action="store_true", help="一键执行全部步骤")
+    parser.add_argument(
+        "--steps",
+        nargs="+",
+        metavar="STEP",
+        help="按 key 指定步骤，如 --steps server business client",
+    )
+    args = parser.parse_args()
+
+    if args.all:
+        run_steps([s.key for s in STEPS])
+    elif args.steps:
+        run_steps(args.steps)
+    else:
+        interactive()
+
+
+if __name__ == "__main__":
+    try:
+        main()
+    except KeyboardInterrupt:
+        print()
+        error("已中断")
+        sys.exit(130)

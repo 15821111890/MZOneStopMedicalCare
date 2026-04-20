@@ -1,0 +1,462 @@
+<!DOCTYPE html><html lang="en"><head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Explore China | CareBridgeChina</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&amp;family=Inter:wght@300;400;500;600&amp;display=swap" rel="stylesheet"/>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.0.0/js/all.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.0.0/css/all.min.css"/>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: { 50: '#f0f9ff', 100: '#e0f2fe', 500: '#0ea5e9', 600: '#0284c7', 700: '#0369a1', 900: '#0c4a6e' },
+                        secondary: { 50: '#f5f3ff', 100: '#ede9fe', 500: '#8b5cf6', 600: '#7c3aed', 700: '#6d28d9' },
+                        accent: { 50: '#fff7ed', 100: '#ffedd5', 500: '#f97316', 600: '#ea580c' },
+                        medical: { 50: '#f8fafc', 100: '#f1f5f9', 800: '#1e293b', 900: '#0f172a' }
+                    },
+                    fontFamily: {
+                        serif: ['Playfair Display', 'serif'],
+                        sans: ['Inter', 'sans-serif']
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        .glass-effect { background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(10px); }
+        .gradient-text { background: linear-gradient(135deg, #0284c7 0%, #7c3aed 50%, #ea580c 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .scroll-reveal { opacity: 0; transform: translateY(30px); transition: all 0.8s ease; }
+        .scroll-reveal.active { opacity: 1; transform: translateY(0); }
+    </style>
+<script src="https://www.kimi.com/sdk-seed.js" defer=""></script></head>
+<body class="font-sans text-medical-800 antialiased bg-medical-50">
+
+    <!-- Navigation -->
+    <nav class="fixed w-full z-50 glass-effect border-b border-gray-200/50" id="navbar">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-20">
+                <a href="index.html" class="flex items-center space-x-3">
+                    <div class="w-10 h-10 bg-gradient-to-br from-primary-600 to-secondary-600 rounded-lg flex items-center justify-center text-white font-bold text-xl">C</div>
+                    <span class="font-serif text-2xl font-bold text-medical-900">CareBridge<span class="text-primary-600">China</span></span>
+                </a>
+                <div class="hidden md:flex space-x-6 items-center">
+                    <a href="index.html" class="text-gray-600 hover:text-primary-600 font-medium transition">Home Page</a>
+                    <a href="homepage.html" class="text-gray-600 hover:text-primary-600 font-medium transition">About Us</a>
+                    <div class="dropdown relative">
+                        <button class="text-gray-600 hover:text-primary-600 font-medium transition flex items-center">
+                            Services
+                            <i class="fas fa-chevron-down ml-1 text-xs"></i>
+                        </button>
+                        <div class="dropdown-menu hidden absolute top-full left-0 mt-2 w-64 bg-white rounded-xl shadow-xl border border-gray-100 py-2">
+                            <a href="health-screening.html" class="block px-4 py-3 hover:bg-primary-50 text-gray-700 hover:text-primary-600 transition"><i class="fas fa-stethoscope w-6"></i>Health Screening</a>
+                            <a href="dentistry.html" class="block px-4 py-3 hover:bg-primary-50 text-gray-700 hover:text-primary-600 transition"><i class="fas fa-tooth w-6"></i>Dentistry</a>
+                            <a href="cosmetic-surgery.html" class="block px-4 py-3 hover:bg-primary-50 text-gray-700 hover:text-primary-600 transition"><i class="fas fa-user-md w-6"></i>Cosmetic &amp; Plastic Surgery</a>
+                            <a href="tcm.html" class="block px-4 py-3 hover:bg-primary-50 text-gray-700 hover:text-primary-600 transition"><i class="fas fa-yin-yang w-6"></i>Traditional Chinese Medicine</a>
+                            <a href="car-t-therapy.html" class="block px-4 py-3 hover:bg-primary-50 text-gray-700 hover:text-primary-600 transition"><i class="fas fa-dna w-6"></i>CAR-T Cell Therapy</a>
+                            <a href="advanced-treatment.html" class="block px-4 py-3 hover:bg-primary-50 text-gray-700 hover:text-primary-600 transition"><i class="fas fa-heartbeat w-6"></i>Other Advanced Treatment</a>
+                        </div>
+                    </div>
+                    <a href="why-china.html" class="text-gray-600 hover:text-primary-600 font-medium transition">Why China</a>
+                    <a href="explore-china.html" class="text-primary-600 font-medium transition">Explore China</a>
+                    <a href="medical-journey.html" class="text-gray-600 hover:text-primary-600 font-medium transition">Your Journey</a>
+                    <a href="index.html#contact" class="px-6 py-2 bg-primary-600 text-white rounded-full font-medium hover:bg-primary-700 transition">Contact Us</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="relative pt-32 pb-20 lg:pt-40 lg:pb-32 bg-gradient-to-br from-primary-50 via-white to-secondary-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center scroll-reveal">
+                <div class="inline-flex items-center px-4 py-2 rounded-full bg-primary-100 text-primary-700 text-sm font-semibold mb-6">
+                    <i class="fas fa-map-marked-alt mr-2"></i>
+                    Discover the Extraordinary
+                </div>
+                <h1 class="font-serif text-5xl lg:text-6xl font-bold text-medical-900 mb-6">
+                    Explore <span class="gradient-text">China</span>
+                </h1>
+                <p class="text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed">
+                    Turn your medical journey into an unforgettable adventure. From Shanghai&#39;s futuristic skyline to ancient wonders, experience 5,000 years of culture, cuisine, and hospitality.
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Shanghai Tourism -->
+    <section class="py-24 bg-white">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-16 scroll-reveal">
+                <h2 class="font-serif text-4xl font-bold text-medical-900 mb-4">Shanghai Highlights</h2>
+                <p class="text-xl text-gray-600">China&#39;s most cosmopolitan city—where ancient tradition meets futuristic innovation</p>
+            </div>
+
+            <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <div class="group relative overflow-hidden rounded-3xl scroll-reveal">
+                    <img src="https://images.unsplash.com/photo-1548919973-5cef591cdbc9?w=600" alt="The Bund" class="w-full h-80 object-cover group-hover:scale-110 transition duration-500"/>
+                    <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent flex items-end p-8">
+                        <div>
+                            <h3 class="font-bold text-white text-2xl mb-2">The Bund</h3>
+                            <p class="text-white/80">Historic waterfront promenade lined with colonial-era architecture. The best place to witness Shanghai&#39;s dramatic skyline contrast—classic European buildings on one side, futuristic skyscrapers on the other.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="group relative overflow-hidden rounded-3xl scroll-reveal">
+                    <img src="https://images.unsplash.com/photo-1474181487882-5abf3f0ba6c2?w=600" alt="Shanghai Tower" class="w-full h-80 object-cover group-hover:scale-110 transition duration-500"/>
+                    <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent flex items-end p-8">
+                        <div>
+                            <h3 class="font-bold text-white text-2xl mb-2">Shanghai Tower</h3>
+                            <p class="text-white/80">At 632 meters, the world&#39;s second-tallest building. Visit the observation deck on the 118th floor for breathtaking 360° views of the city and the winding Huangpu River below.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="group relative overflow-hidden rounded-3xl scroll-reveal">
+                    <img src="https://images.unsplash.com/photo-1599571234909-29ed5d1321d6?w=600" alt="Yu Garden" class="w-full h-80 object-cover group-hover:scale-110 transition duration-500"/>
+                    <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent flex items-end p-8">
+                        <div>
+                            <h3 class="font-bold text-white text-2xl mb-2">Yu Garden</h3>
+                            <p class="text-white/80">A 400-year-old classical Chinese garden featuring traditional pavilions, rockeries, ponds, and ancient trees. Adjacent to the bustling Yuyuan Bazaar for traditional crafts and local snacks.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="group relative overflow-hidden rounded-3xl scroll-reveal">
+                    <img src="https://images.unsplash.com/photo-1565521990426-613d7b8767b4?w=600" alt="French Concession" class="w-full h-80 object-cover group-hover:scale-110 transition duration-500"/>
+                    <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent flex items-end p-8">
+                        <div>
+                            <h3 class="font-bold text-white text-2xl mb-2">French Concession</h3>
+                            <p class="text-white/80">Tree-lined avenues, charming villas, and boutique cafes. This former French settlement offers a peaceful retreat with its European architecture, art galleries, and trendy restaurants.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="group relative overflow-hidden rounded-3xl scroll-reveal">
+                    <img src="https://images.unsplash.com/photo-1548919973-5cef591cdbc9?w=600" alt="Huangpu River Cruise" class="w-full h-80 object-cover group-hover:scale-110 transition duration-500"/>
+                    <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent flex items-end p-8">
+                        <div>
+                            <h3 class="font-bold text-white text-2xl mb-2">Huangpu River Cruise</h3>
+                            <p class="text-white/80">See Shanghai&#39;s iconic skyline illuminated at night. The cruise offers the most spectacular views of the Bund and Pudong&#39;s glittering skyscrapers reflecting on the water.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="group relative overflow-hidden rounded-3xl scroll-reveal">
+                    <img src="https://images.unsplash.com/photo-1550966871-3ed3c47e2ce2?w=600" alt="Chinese Food" class="w-full h-80 object-cover group-hover:scale-110 transition duration-500"/>
+                    <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent flex items-end p-8">
+                        <div>
+                            <h3 class="font-bold text-white text-2xl mb-2">Culinary Delights</h3>
+                            <p class="text-white/80">From soup dumplings (xiaolongbao) at Michelin-starred restaurants to street food at night markets. Shanghai&#39;s diverse food scene reflects its history as a global trading port.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Cultural Experiences -->
+    <section class="py-24 bg-gradient-to-br from-amber-50 via-white to-red-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-16 scroll-reveal">
+                <h2 class="font-serif text-4xl font-bold text-medical-900 mb-4">Cultural Immersion Experiences</h2>
+                <p class="text-xl text-gray-600">Authentic encounters with China&#39;s living heritage</p>
+            </div>
+
+            <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <div class="bg-white rounded-3xl overflow-hidden shadow-lg hover:shadow-xl transition scroll-reveal">
+                    <img src="https://images.unsplash.com/photo-1545167496-31b3d3e27358?w=600" alt="Tea Ceremony" class="w-full h-56 object-cover"/>
+                    <div class="p-6">
+                        <div class="flex items-center gap-2 mb-3">
+                            <span class="px-3 py-1 bg-green-100 text-green-700 rounded-full text-xs font-medium">Included in Premium</span>
+                        </div>
+                        <h3 class="font-bold text-xl mb-3">Traditional Tea Ceremony</h3>
+                        <p class="text-gray-600 mb-4">Learn the art of Chinese tea from a master. Discover the history, brewing techniques, and cultural significance behind this 4,000-year-old tradition. Sample premium teas including Longjing, Tieguanyin, and Pu&#39;er.</p>
+                        <div class="flex items-center text-sm text-gray-500">
+                            <i class="far fa-clock mr-2"></i>
+                            90 minutes • Yu Garden area
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-white rounded-3xl overflow-hidden shadow-lg hover:shadow-xl transition scroll-reveal">
+                    <img src="https://images.unsplash.com/photo-1513622470522-26c3c8a854bc?w=600" alt="TCM" class="w-full h-56 object-cover"/>
+                    <div class="p-6">
+                        <div class="flex items-center gap-2 mb-3">
+                            <span class="px-3 py-1 bg-green-100 text-green-700 rounded-full text-xs font-medium">Included</span>
+                        </div>
+                        <h3 class="font-bold text-xl mb-3">TCM Wellness Session</h3>
+                        <p class="text-gray-600 mb-4">Experience Traditional Chinese Medicine with a consultation from a licensed practitioner. Learn about your body constitution (体质) and receive personalized wellness advice. Optional acupuncture or cupping therapy available.</p>
+                        <div class="flex items-center text-sm text-gray-500">
+                            <i class="far fa-clock mr-2"></i>
+                            60 minutes • Licensed practitioner
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-white rounded-3xl overflow-hidden shadow-lg hover:shadow-xl transition scroll-reveal">
+                    <img src="https://images.unsplash.com/photo-1555212697-194d092e3b8f?w=600" alt="Night Market" class="w-full h-56 object-cover"/>
+                    <div class="p-6">
+                        <div class="flex items-center gap-2 mb-3">
+                            <span class="px-3 py-1 bg-green-100 text-green-700 rounded-full text-xs font-medium">Included</span>
+                        </div>
+                        <h3 class="font-bold text-xl mb-3">Night Market Food Tour</h3>
+                        <p class="text-gray-600 mb-4">Explore Shanghai&#39;s vibrant night markets with a local guide. Sample street food delicacies—from soup dumplings and scallion pancakes to stinky tofu and sugar-coated haws. A feast for adventurous foodies!</p>
+                        <div class="flex items-center text-sm text-gray-500">
+                            <i class="far fa-clock mr-2"></i>
+                            2.5 hours • 8+ food tastings
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-white rounded-3xl overflow-hidden shadow-lg hover:shadow-xl transition scroll-reveal">
+                    <img src="https://images.unsplash.com/photo-1515002246390-7bf7e8f87b54?w=600" alt="Cooking Class" class="w-full h-56 object-cover"/>
+                    <div class="p-6">
+                        <div class="flex items-center gap-2 mb-3">
+                            <span class="px-3 py-1 bg-amber-100 text-amber-700 rounded-full text-xs font-medium">Optional Add-on</span>
+                        </div>
+                        <h3 class="font-bold text-xl mb-3">Authentic Cooking Class</h3>
+                        <p class="text-gray-600 mb-4">Visit a local market to select fresh ingredients, then learn to cook signature Shanghai dishes with a professional chef. Master classics like sweet &amp; sour ribs and scallion oil noodles. Take home recipes to impress your friends.</p>
+                        <div class="flex items-center text-sm text-gray-500">
+                            <i class="far fa-clock mr-2"></i>
+                            3 hours • Market tour + cooking
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-white rounded-3xl overflow-hidden shadow-lg hover:shadow-xl transition scroll-reveal">
+                    <img src="https://images.unsplash.com/photo-1538669716095-09471c8a6c7a?w=600" alt="Calligraphy" class="w-full h-56 object-cover"/>
+                    <div class="p-6">
+                        <div class="flex items-center gap-2 mb-3">
+                            <span class="px-3 py-1 bg-amber-100 text-amber-700 rounded-full text-xs font-medium">Optional Add-on</span>
+                        </div>
+                        <h3 class="font-bold text-xl mb-3">Calligraphy Workshop</h3>
+                        <p class="text-gray-600 mb-4">Discover the meditative art of Chinese calligraphy. Learn basic brush strokes, understand the philosophy behind each character, and create your own artwork to take home as a unique souvenir of your journey.</p>
+                        <div class="flex items-center text-sm text-gray-500">
+                            <i class="far fa-clock mr-2"></i>
+                            2 hours • All materials included
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-white rounded-3xl overflow-hidden shadow-lg hover:shadow-xl transition scroll-reveal">
+                    <img src="https://images.unsplash.com/photo-1512813195386-6cf811ad3542?w=600" alt="Temple" class="w-full h-56 object-cover"/>
+                    <div class="p-6">
+                        <div class="flex items-center gap-2 mb-3">
+                            <span class="px-3 py-1 bg-green-100 text-green-700 rounded-full text-xs font-medium">Included</span>
+                        </div>
+                        <h3 class="font-bold text-xl mb-3">Temple &amp; Meditation</h3>
+                        <p class="text-gray-600 mb-4">Visit the serene Jade Buddha Temple, one of Shanghai&#39;s most famous Buddhist temples. Learn about Buddhist philosophy, observe monks at prayer, and experience a moment of tranquility amidst the bustling city.</p>
+                        <div class="flex items-center text-sm text-gray-500">
+                            <i class="far fa-clock mr-2"></i>
+                            1.5 hours • Jade Buddha Temple
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Beyond Shanghai -->
+    <section class="py-24 bg-white">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-16 scroll-reveal">
+                <h2 class="font-serif text-4xl font-bold text-medical-900 mb-4">Beyond Shanghai</h2>
+                <p class="text-xl text-gray-600">Extend your journey to explore more of China&#39;s wonders</p>
+            </div>
+
+            <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+                <div class="group bg-white rounded-3xl overflow-hidden shadow-lg hover:shadow-xl transition scroll-reveal">
+                    <div class="relative h-56 overflow-hidden">
+                        <img src="https://images.unsplash.com/photo-1508804185872-d7badad00f7d?w=600" alt="Great Wall" class="w-full h-full object-cover group-hover:scale-110 transition duration-500"/>
+                        <div class="absolute top-4 right-4 px-3 py-1 bg-red-600 text-white text-xs font-bold rounded-full">MUST SEE</div>
+                    </div>
+                    <div class="p-6">
+                        <h3 class="font-bold text-xl mb-2">Beijing</h3>
+                        <p class="text-gray-600 text-sm mb-4">Walk the Great Wall, explore the Forbidden City, and experience China&#39;s imperial history at Tiananmen Square and the Summer Palace.</p>
+                        <div class="flex items-center justify-between text-sm">
+                            <span class="text-gray-500"><i class="far fa-clock mr-1"></i>2-3 days</span>
+                            <span class="text-primary-600 font-medium">From $400</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="group bg-white rounded-3xl overflow-hidden shadow-lg hover:shadow-xl transition scroll-reveal">
+                    <div class="relative h-56 overflow-hidden">
+                        <img src="https://images.unsplash.com/photo-1528164344705-47542687000d?w=600" alt="Hangzhou" class="w-full h-full object-cover group-hover:scale-110 transition duration-500"/>
+                    </div>
+                    <div class="p-6">
+                        <h3 class="font-bold text-xl mb-2">Hangzhou</h3>
+                        <p class="text-gray-600 text-sm mb-4">Cruise West Lake, visit tea plantations, and discover why Marco Polo called it &#34;paradise on earth.&#34; Just 1 hour from Shanghai by high-speed train.</p>
+                        <div class="flex items-center justify-between text-sm">
+                            <span class="text-gray-500"><i class="far fa-clock mr-1"></i>1-2 days</span>
+                            <span class="text-primary-600 font-medium">From $250</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="group bg-white rounded-3xl overflow-hidden shadow-lg hover:shadow-xl transition scroll-reveal">
+                    <div class="relative h-56 overflow-hidden">
+                        <img src="https://images.unsplash.com/photo-1560851691-ebb648885d56?w=600" alt="Chengdu" class="w-full h-full object-cover group-hover:scale-110 transition duration-500"/>
+                    </div>
+                    <div class="p-6">
+                        <h3 class="font-bold text-xl mb-2">Chengdu</h3>
+                        <p class="text-gray-600 text-sm mb-4">Meet giant pandas at the breeding center, taste authentic Sichuan cuisine, and experience the laid-back teahouse culture of western China.</p>
+                        <div class="flex items-center justify-between text-sm">
+                            <span class="text-gray-500"><i class="far fa-clock mr-1"></i>2 days</span>
+                            <span class="text-primary-600 font-medium">From $350</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="group bg-white rounded-3xl overflow-hidden shadow-lg hover:shadow-xl transition scroll-reveal">
+                    <div class="relative h-56 overflow-hidden">
+                        <img src="https://images.unsplash.com/photo-1537531383496-f4749b8032cf?w=600" alt="Guilin" class="w-full h-full object-cover group-hover:scale-110 transition duration-500"/>
+                    </div>
+                    <div class="p-6">
+                        <h3 class="font-bold text-xl mb-2">Guilin</h3>
+                        <p class="text-gray-600 text-sm mb-4">Cruise the Li River among dramatic karst mountains—one of China&#39;s most photographed landscapes. A photographer&#39;s paradise.</p>
+                        <div class="flex items-center justify-between text-sm">
+                            <span class="text-gray-500"><i class="far fa-clock mr-1"></i>2-3 days</span>
+                            <span class="text-primary-600 font-medium">From $400</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="mt-12 bg-gradient-to-r from-primary-600 to-secondary-600 rounded-3xl p-8 text-white scroll-reveal">
+                <div class="flex flex-col md:flex-row items-center justify-between gap-6">
+                    <div>
+                        <h3 class="font-bold text-2xl mb-2">Want to Extend Your Stay?</h3>
+                        <p class="text-white/90">Many patients add 2-3 extra days to explore more of China. We can arrange trips to Beijing, Hangzhou, Suzhou, Chengdu, or other destinations. Custom itineraries available.</p>
+                    </div>
+                    <a href="index.html#contact" class="px-8 py-4 bg-white text-primary-600 rounded-full font-semibold hover:bg-gray-100 transition whitespace-nowrap">
+                        Ask About Extensions
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Travel &amp; Stay -->
+    <section class="py-24 bg-gradient-to-br from-blue-50 via-white to-indigo-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-16 scroll-reveal">
+                <h2 class="font-serif text-4xl font-bold text-medical-900 mb-4">Travel &amp; Stay</h2>
+                <p class="text-xl text-gray-600">Rest and recover in comfort—handpicked accommodations near top medical facilities</p>
+            </div>
+
+            <div class="grid md:grid-cols-2 gap-8">
+                <div class="bg-white rounded-3xl overflow-hidden shadow-lg scroll-reveal">
+                    <img src="https://images.unsplash.com/photo-1566073771259-6a8506099945?w=800" alt="4-Star Hotel" class="w-full h-64 object-cover"/>
+                    <div class="p-8">
+                        <div class="flex items-center justify-between mb-4">
+                            <h3 class="font-bold text-2xl text-medical-900">4-Star Comfort</h3>
+                            <span class="px-4 py-1 bg-blue-100 text-blue-700 rounded-full text-sm font-medium">Essential Package</span>
+                        </div>
+                        <p class="text-gray-600 mb-6">Modern, well-appointed hotels within 10 minutes of your medical center. Enjoy comfortable rooms, complimentary breakfast, free WiFi, and 24-hour concierge service.</p>
+                        <ul class="space-y-3">
+                            <li class="flex items-center text-gray-700"><i class="fas fa-check text-blue-500 mr-3"></i>Daily breakfast buffet</li>
+                            <li class="flex items-center text-gray-700"><i class="fas fa-check text-blue-500 mr-3"></i>Airport shuttle service</li>
+                            <li class="flex items-center text-gray-700"><i class="fas fa-check text-blue-500 mr-3"></i>English-speaking staff</li>
+                            <li class="flex items-center text-gray-700"><i class="fas fa-check text-blue-500 mr-3"></i>Walking distance to metro</li>
+                            <li class="flex items-center text-gray-700"><i class="fas fa-check text-blue-500 mr-3"></i>Non-smoking rooms</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="bg-white rounded-3xl overflow-hidden shadow-lg scroll-reveal">
+                    <img src="https://images.unsplash.com/photo-1582719508461-905c673771fd?w=800" alt="5-Star Hotel" class="w-full h-64 object-cover"/>
+                    <div class="p-8">
+                        <div class="flex items-center justify-between mb-4">
+                            <h3 class="font-bold text-2xl text-medical-900">5-Star Luxury</h3>
+                            <span class="px-4 py-1 bg-amber-100 text-amber-700 rounded-full text-sm font-medium">Premium Package</span>
+                        </div>
+                        <p class="text-gray-600 mb-6">Indulge in world-class hospitality at internationally renowned hotels. Experience impeccable service, spa facilities, fine dining, and stunning city views.</p>
+                        <ul class="space-y-3">
+                            <li class="flex items-center text-gray-700"><i class="fas fa-check text-amber-500 mr-3"></i>Executive lounge access</li>
+                            <li class="flex items-center text-gray-700"><i class="fas fa-check text-amber-500 mr-3"></i>Spa &amp; wellness center</li>
+                            <li class="flex items-center text-gray-700"><i class="fas fa-check text-amber-500 mr-3"></i>In-room dining &amp; concierge</li>
+                            <li class="flex items-center text-gray-700"><i class="fas fa-check text-amber-500 mr-3"></i>Premium location &amp; views</li>
+                            <li class="flex items-center text-gray-700"><i class="fas fa-check text-amber-500 mr-3"></i>Welcome amenities</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <div class="mt-8 bg-white rounded-3xl p-8 shadow-lg scroll-reveal">
+                <div class="flex items-center gap-6 mb-6">
+                    <div class="w-16 h-16 bg-green-100 rounded-2xl flex items-center justify-center flex-shrink-0">
+                        <i class="fas fa-shield-alt text-green-600 text-2xl"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-xl text-medical-900">Your Safety &amp; Comfort Come First</h3>
+                        <p class="text-gray-600">All accommodations are carefully vetted for proximity to hospitals, cleanliness, and international standards</p>
+                    </div>
+                </div>
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-4 text-center">
+                    <div class="p-4 bg-gray-50 rounded-xl">
+                        <div class="text-2xl font-bold text-green-600 mb-1">&lt;10 min</div>
+                        <div class="text-sm text-gray-600">To medical center</div>
+                    </div>
+                    <div class="p-4 bg-gray-50 rounded-xl">
+                        <div class="text-2xl font-bold text-green-600 mb-1">24/7</div>
+                        <div class="text-sm text-gray-600">Concierge support</div>
+                    </div>
+                    <div class="p-4 bg-gray-50 rounded-xl">
+                        <div class="text-2xl font-bold text-green-600 mb-1">100%</div>
+                        <div class="text-sm text-gray-600">Non-smoking rooms</div>
+                    </div>
+                    <div class="p-4 bg-gray-50 rounded-xl">
+                        <div class="text-2xl font-bold text-green-600 mb-1">Free</div>
+                        <div class="text-sm text-gray-600">High-speed WiFi</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="py-24 bg-gradient-to-br from-primary-900 via-secondary-900 to-accent-900 text-white relative overflow-hidden">
+        <div class="absolute inset-0 opacity-10">
+            <div class="absolute inset-0" style="background-image: radial-gradient(circle at 2px 2px, rgba(255,255,255,0.15) 1px, transparent 0); background-size: 40px 40px;"></div>
+        </div>
+        
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center relative scroll-reveal">
+            <h2 class="font-serif text-4xl lg:text-5xl font-bold mb-6">Ready to Explore China?</h2>
+            <p class="text-xl text-white/80 mb-8">Combine world-class healthcare with an unforgettable China experience. Your body and soul will thank you.</p>
+            <div class="flex flex-col sm:flex-row gap-4 justify-center">
+                <a href="medical-journey.html" class="px-8 py-4 bg-white text-primary-900 rounded-full font-semibold text-lg hover:bg-gray-100 transition shadow-xl">
+                    View Full Journey
+                </a>
+                <a href="index.html#contact" class="px-8 py-4 border-2 border-white text-white rounded-full font-semibold text-lg hover:bg-white/10 transition">
+                    Contact Us
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-medical-900 text-gray-400 py-12">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex flex-col md:flex-row justify-between items-center">
+                <div class="flex items-center space-x-2 mb-4 md:mb-0">
+                    <div class="w-8 h-8 bg-primary-600 rounded-lg flex items-center justify-center text-white font-bold">C</div>
+                    <span class="font-serif text-xl font-bold text-white">CareBridge<span class="text-primary-500">China</span></span>
+                </div>
+                <div class="text-sm">© 2026 CareBridgeChina. All rights reserved.</div>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => { if (entry.isIntersecting) entry.target.classList.add('active'); });
+        }, { threshold: 0.1 });
+        document.querySelectorAll('.scroll-reveal').forEach((el) => observer.observe(el));
+    </script>
+
+
+</body></html>

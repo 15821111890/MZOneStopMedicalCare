@@ -1,0 +1,540 @@
+<!DOCTYPE html><html lang="en"><head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Explore Your Journey | CareBridgeChina</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&amp;family=Inter:wght@300;400;500;600&amp;display=swap" rel="stylesheet"/>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.0.0/js/all.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.0.0/css/all.min.css"/>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: { 50: '#f0f9ff', 100: '#e0f2fe', 500: '#0ea5e9', 600: '#0284c7', 700: '#0369a1', 900: '#0c4a6e' },
+                        secondary: { 50: '#f5f3ff', 100: '#ede9fe', 500: '#8b5cf6', 600: '#7c3aed', 700: '#6d28d9' },
+                        accent: { 50: '#fff7ed', 100: '#ffedd5', 500: '#f97316', 600: '#ea580c' },
+                        medical: { 50: '#f8fafc', 100: '#f1f5f9', 800: '#1e293b', 900: '#0f172a' }
+                    },
+                    fontFamily: {
+                        serif: ['Playfair Display', 'serif'],
+                        sans: ['Inter', 'sans-serif']
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        .glass-effect { background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(10px); }
+        .gradient-text { background: linear-gradient(135deg, #0284c7 0%, #7c3aed 50%, #ea580c 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .scroll-reveal { opacity: 0; transform: translateY(30px); transition: all 0.8s ease; }
+        .scroll-reveal.active { opacity: 1; transform: translateY(0); }
+        .timeline-line { background: linear-gradient(to bottom, #0284c7, #8b5cf6, #f97316); }
+        .day-card { background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%); }
+    </style>
+<script src="https://www.kimi.com/sdk-seed.js" defer=""></script></head>
+<body class="font-sans text-medical-800 antialiased bg-medical-50">
+
+    <!-- Navigation -->
+    <nav class="fixed w-full z-50 glass-effect border-b border-gray-200/50" id="navbar">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-20">
+                <a href="index.html" class="flex items-center space-x-3">
+                    <div class="w-10 h-10 bg-gradient-to-br from-primary-600 to-secondary-600 rounded-lg flex items-center justify-center text-white font-bold text-xl">C</div>
+                    <span class="font-serif text-2xl font-bold text-medical-900">CareBridge<span class="text-primary-600">China</span></span>
+                </a>
+                <div class="hidden md:flex space-x-6 items-center">
+                    <a href="index.html" class="text-gray-600 hover:text-primary-600 font-medium transition">Home Page</a>
+                    <a href="homepage.html" class="text-gray-600 hover:text-primary-600 font-medium transition">About Us</a>
+                    <div class="dropdown relative">
+                        <button class="text-gray-600 hover:text-primary-600 font-medium transition flex items-center">
+                            Services
+                            <i class="fas fa-chevron-down ml-1 text-xs"></i>
+                        </button>
+                        <div class="dropdown-menu hidden absolute top-full left-0 mt-2 w-64 bg-white rounded-xl shadow-xl border border-gray-100 py-2">
+                            <a href="health-screening.html" class="block px-4 py-3 hover:bg-primary-50 text-gray-700 hover:text-primary-600 transition"><i class="fas fa-stethoscope w-6"></i>Health Screening</a>
+                            <a href="dentistry.html" class="block px-4 py-3 hover:bg-primary-50 text-gray-700 hover:text-primary-600 transition"><i class="fas fa-tooth w-6"></i>Dentistry</a>
+                            <a href="cosmetic-surgery.html" class="block px-4 py-3 hover:bg-primary-50 text-gray-700 hover:text-primary-600 transition"><i class="fas fa-user-md w-6"></i>Cosmetic &amp; Plastic Surgery</a>
+                            <a href="tcm.html" class="block px-4 py-3 hover:bg-primary-50 text-gray-700 hover:text-primary-600 transition"><i class="fas fa-yin-yang w-6"></i>Traditional Chinese Medicine</a>
+                            <a href="car-t-therapy.html" class="block px-4 py-3 hover:bg-primary-50 text-gray-700 hover:text-primary-600 transition"><i class="fas fa-dna w-6"></i>CAR-T Cell Therapy</a>
+                            <a href="advanced-treatment.html" class="block px-4 py-3 hover:bg-primary-50 text-gray-700 hover:text-primary-600 transition"><i class="fas fa-heartbeat w-6"></i>Other Advanced Treatment</a>
+                        </div>
+                    </div>
+                    <a href="why-china.html" class="text-gray-600 hover:text-primary-600 font-medium transition">Why China</a>
+                    <a href="explore-china.html" class="text-gray-600 hover:text-primary-600 font-medium transition">Explore China</a>
+                    <a href="medical-journey.html" class="text-primary-600 font-medium transition">Your Journey</a>
+                    <a href="index.html#contact" class="px-6 py-2 bg-primary-600 text-white rounded-full font-medium hover:bg-primary-700 transition">Contact Us</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="relative pt-32 pb-20 lg:pt-40 lg:pb-32 bg-gradient-to-br from-primary-50 via-white to-secondary-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid lg:grid-cols-2 gap-12 items-center">
+                <div class="scroll-reveal">
+                    <div class="inline-flex items-center px-4 py-2 rounded-full bg-gradient-to-r from-primary-100 to-secondary-100 text-primary-700 text-sm font-semibold mb-6">
+                        <i class="fas fa-plane mr-2"></i>
+                        The Complete China Experience
+                    </div>
+                    <h1 class="font-serif text-5xl lg:text-6xl font-bold text-medical-900 leading-tight mb-6">
+                        Heal &amp;<br/><span class="gradient-text">Discover China</span>
+                    </h1>
+                    <p class="text-xl text-gray-600 mb-8 leading-relaxed">
+                        Why just get treated when you can experience one of the world&#39;s oldest civilizations? Our signature journey combines world-class healthcare with unforgettable Chinese culture, cuisine, and sights.
+                    </p>
+                    <div class="flex flex-col sm:flex-row gap-4">
+                        <a href="#itinerary" class="px-8 py-4 bg-primary-600 text-white rounded-full font-semibold text-lg hover:bg-primary-700 transition shadow-lg text-center">
+                            View 7-Day Itinerary
+                        </a>
+                        <a href="index.html#contact" class="px-8 py-4 border-2 border-primary-600 text-primary-700 rounded-full font-semibold text-lg hover:bg-primary-50 transition text-center">
+                            Plan My Journey
+                        </a>
+                    </div>
+                </div>
+                <div class="relative scroll-reveal">
+                    <img src="https://images.unsplash.com/photo-1537531383496-f4749b8032cf?w=800" alt="Shanghai Skyline" class="rounded-3xl shadow-2xl w-full object-cover h-[450px]"/>
+                    <div class="absolute -bottom-6 -left-6 bg-white p-6 rounded-2xl shadow-xl">
+                        <div class="text-3xl font-bold text-primary-600">7 Days</div>
+                        <div class="text-sm text-gray-500">Healthcare + Culture</div>
+                        <div class="text-xs text-gray-400 mt-1">All-inclusive packages</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- What Makes Us Different -->
+    <section class="py-24 bg-white">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-16 scroll-reveal">
+                <h2 class="font-serif text-4xl font-bold text-medical-900 mb-4">What Makes Your Journey Special</h2>
+                <p class="text-xl text-gray-600 max-w-3xl mx-auto">More than medical tourism — an experience that enriches body, mind, and soul.</p>
+            </div>
+
+            <div class="grid md:grid-cols-3 gap-8">
+                <div class="bg-gradient-to-br from-primary-50 to-white p-8 rounded-3xl text-center scroll-reveal">
+                    <div class="w-16 h-16 bg-primary-100 rounded-full flex items-center justify-center mx-auto mb-6">
+                        <i class="fas fa-heartbeat text-primary-600 text-2xl"></i>
+                    </div>
+                    <h3 class="font-bold text-xl mb-3">World-Class Healthcare</h3>
+                    <p class="text-gray-600">JCI-accredited hospitals, English-speaking doctors, and cutting-edge treatments at a fraction of Western costs.</p>
+                </div>
+
+                <div class="bg-gradient-to-br from-secondary-50 to-white p-8 rounded-3xl text-center scroll-reveal">
+                    <div class="w-16 h-16 bg-secondary-100 rounded-full flex items-center justify-center mx-auto mb-6">
+                        <i class="fas fa-landmark text-secondary-600 text-2xl"></i>
+                    </div>
+                    <h3 class="font-bold text-xl mb-3">Cultural Immersion</h3>
+                    <p class="text-gray-600">From ancient temples to futuristic skylines, experience 5,000 years of history alongside modern innovation.</p>
+                </div>
+
+                <div class="bg-gradient-to-br from-accent-50 to-white p-8 rounded-3xl text-center scroll-reveal">
+                    <div class="w-16 h-16 bg-accent-100 rounded-full flex items-center justify-center mx-auto mb-6">
+                        <i class="fas fa-concierge-bell text-accent-600 text-2xl"></i>
+                    </div>
+                    <h3 class="font-bold text-xl mb-3">Zero Stress</h3>
+                    <p class="text-gray-600">We handle everything — airport pickup, hotel bookings, medical appointments, translators, and tour guides.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 7-Day Itinerary -->
+    <section id="itinerary" class="py-24 bg-medical-50">
+        <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-16 scroll-reveal">
+                <h2 class="font-serif text-4xl font-bold text-medical-900 mb-4">A Typical 7-Day Medical Journey</h2>
+                <p class="text-xl text-gray-600">Here&#39;s an example itinerary for a comprehensive health screening combined with cultural exploration. Every journey is customized to your specific needs.</p>
+            </div>
+
+            <div class="relative">
+                <div class="hidden md:block absolute left-1/2 transform -translate-x-1/2 w-1 h-full timeline-line rounded-full"></div>
+
+                <!-- Day 0 -->
+                <div class="relative mb-12 scroll-reveal">
+                    <div class="hidden md:block absolute left-1/2 transform -translate-x-1/2 w-16 h-16 bg-gray-800 rounded-full flex items-center justify-center text-white font-bold text-xl z-10 border-4 border-white">0</div>
+                    <div class="md:w-5/12 md:ml-auto md:pl-12">
+                        <div class="day-card p-6 rounded-2xl border border-gray-200">
+                            <div class="flex items-center mb-4">
+                                <span class="md:hidden w-10 h-10 bg-gray-800 rounded-full flex items-center justify-center text-white font-bold mr-4">0</span>
+                                <div>
+                                    <h3 class="font-bold text-xl">Departure from Home Country</h3>
+                                    <p class="text-gray-500 text-sm">Your Journey Begins</p>
+                                </div>
+                            </div>
+                            <p class="text-gray-600">Board your flight to Shanghai. Our team has already prepared everything — your medical appointments are scheduled, your hotel is booked, and your personal coordinator is ready to meet you.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Day 1 -->
+                <div class="relative mb-12 scroll-reveal">
+                    <div class="hidden md:block absolute left-1/2 transform -translate-x-1/2 w-16 h-16 bg-primary-600 rounded-full flex items-center justify-center text-white font-bold text-xl z-10 border-4 border-white">1</div>
+                    <div class="md:w-5/12 md:mr-auto md:pr-12 md:text-right">
+                        <div class="day-card p-6 rounded-2xl border border-gray-200">
+                            <div class="flex items-center mb-4 md:flex-row-reverse">
+                                <span class="md:hidden w-10 h-10 bg-primary-600 rounded-full flex items-center justify-center text-white font-bold mr-4">1</span>
+                                <div>
+                                    <h3 class="font-bold text-xl">Arrival in Shanghai</h3>
+                                    <p class="text-gray-500 text-sm">Welcome to China!</p>
+                                </div>
+                            </div>
+                            <ul class="text-sm text-gray-600 space-y-2">
+                                <li class="flex items-center md:justify-end"><span class="md:order-2">VIP airport pickup</span></li>
+                                <li class="flex items-center md:justify-end"><span class="md:order-2">Hotel check-in</span></li>
+                                <li class="flex items-center md:justify-end"><span class="md:order-2">Orientation briefing</span></li>
+                                <li class="flex items-center md:justify-end"><span class="md:order-2">Welcome dinner</span></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Day 2 -->
+                <div class="relative mb-12 scroll-reveal">
+                    <div class="hidden md:block absolute left-1/2 transform -translate-x-1/2 w-16 h-16 bg-primary-600 rounded-full flex items-center justify-center text-white font-bold text-xl z-10 border-4 border-white">2</div>
+                    <div class="md:w-5/12 md:ml-auto md:pl-12">
+                        <div class="day-card p-6 rounded-2xl border border-gray-200">
+                            <div class="flex items-center mb-4">
+                                <span class="md:hidden w-10 h-10 bg-primary-600 rounded-full flex items-center justify-center text-white font-bold mr-4">2</span>
+                                <div>
+                                    <h3 class="font-bold text-xl">Health Screening Day</h3>
+                                    <p class="text-gray-500 text-sm">Morning: Medical | Afternoon: Exploration</p>
+                                </div>
+                            </div>
+                            <div class="mb-4 p-4 bg-primary-50 rounded-xl">
+                                <h4 class="font-bold text-primary-700 mb-2">Morning (8:00 AM - 12:00 PM)</h4>
+                                <ul class="text-sm text-gray-600 space-y-1">
+                                    <li>• Blood work &amp; urine tests</li>
+                                    <li>• ECG &amp; physical examination</li>
+                                    <li>• Abdominal ultrasound</li>
+                                    <li>• Doctor consultation</li>
+                                </ul>
+                            </div>
+                            <div class="p-4 bg-secondary-50 rounded-xl">
+                                <h4 class="font-bold text-secondary-700 mb-2">Afternoon (2:00 PM - 6:00 PM)</h4>
+                                <p class="text-sm text-gray-600">Guided tour of Shanghai&#39;s iconic Bund waterfront and Nanjing Road shopping district.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Day 3 -->
+                <div class="relative mb-12 scroll-reveal">
+                    <div class="hidden md:block absolute left-1/2 transform -translate-x-1/2 w-16 h-16 bg-accent-500 rounded-full flex items-center justify-center text-white font-bold text-xl z-10 border-4 border-white">3</div>
+                    <div class="md:w-5/12 md:mr-auto md:pr-12 md:text-right">
+                        <div class="day-card p-6 rounded-2xl border border-gray-200">
+                            <div class="flex items-center mb-4 md:flex-row-reverse">
+                                <span class="md:hidden w-10 h-10 bg-accent-500 rounded-full flex items-center justify-center text-white font-bold mr-4">3</span>
+                                <div>
+                                    <h3 class="font-bold text-xl">Gastroscopy/Colonoscopy</h3>
+                                    <p class="text-gray-500 text-sm">Or Cultural Exploration</p>
+                                </div>
+                            </div>
+                            <div class="mb-4">
+                                <h4 class="font-bold text-accent-700 mb-2">Option A: Procedure Day</h4>
+                                <p class="text-sm text-gray-600">If scheduled, you&#39;ll undergo gastroscopy and/or colonoscopy with sedation. Results same day.</p>
+                            </div>
+                            <div class="p-4 bg-primary-50 rounded-xl">
+                                <h4 class="font-bold text-primary-700 mb-2">Option B: Free Tourism</h4>
+                                <p class="text-sm text-gray-600">Explore Shanghai&#39;s Yu Garden, Old Town, and traditional tea houses.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Day 4 -->
+                <div class="relative mb-12 scroll-reveal">
+                    <div class="hidden md:block absolute left-1/2 transform -translate-x-1/2 w-16 h-16 bg-accent-500 rounded-full flex items-center justify-center text-white font-bold text-xl z-10 border-4 border-white">4</div>
+                    <div class="md:w-5/12 md:ml-auto md:pl-12">
+                        <div class="day-card p-6 rounded-2xl border border-gray-200">
+                            <div class="flex items-center mb-4">
+                                <span class="md:hidden w-10 h-10 bg-accent-500 rounded-full flex items-center justify-center text-white font-bold mr-4">4</span>
+                                <div>
+                                    <h3 class="font-bold text-xl">Full-Day Sightseeing</h3>
+                                    <p class="text-gray-500 text-sm">Discover Shanghai&#39;s Magic</p>
+                                </div>
+                            </div>
+                            <div class="space-y-3">
+                                <div class="flex items-start">
+                                    <span class="w-6 h-6 bg-primary-100 rounded-full flex items-center justify-center text-primary-600 text-xs font-bold mr-3 mt-0.5">1</span>
+                                    <div>
+                                        <h5 class="font-semibold">Shanghai Tower Observatory</h5>
+                                        <p class="text-sm text-gray-500">World&#39;s second-tallest building</p>
+                                    </div>
+                                </div>
+                                <div class="flex items-start">
+                                    <span class="w-6 h-6 bg-primary-100 rounded-full flex items-center justify-center text-primary-600 text-xs font-bold mr-3 mt-0.5">2</span>
+                                    <div>
+                                        <h5 class="font-semibold">Yu Garden &amp; Bazaar</h5>
+                                        <p class="text-sm text-gray-500">400-year-old classical garden</p>
+                                    </div>
+                                </div>
+                                <div class="flex items-start">
+                                    <span class="w-6 h-6 bg-primary-100 rounded-full flex items-center justify-center text-primary-600 text-xs font-bold mr-3 mt-0.5">3</span>
+                                    <div>
+                                        <h5 class="font-semibold">French Concession</h5>
+                                        <p class="text-sm text-gray-500">Tree-lined streets and cafes</p>
+                                    </div>
+                                </div>
+                                <div class="flex items-start">
+                                    <span class="w-6 h-6 bg-primary-100 rounded-full flex items-center justify-center text-primary-600 text-xs font-bold mr-3 mt-0.5">4</span>
+                                    <div>
+                                        <h5 class="font-semibold">Evening: River Cruise</h5>
+                                        <p class="text-sm text-gray-500">Illuminated skyline from water</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Day 5 -->
+                <div class="relative mb-12 scroll-reveal">
+                    <div class="hidden md:block absolute left-1/2 transform -translate-x-1/2 w-16 h-16 bg-primary-600 rounded-full flex items-center justify-center text-white font-bold text-xl z-10 border-4 border-white">5</div>
+                    <div class="md:w-5/12 md:mr-auto md:pr-12 md:text-right">
+                        <div class="day-card p-6 rounded-2xl border border-gray-200">
+                            <div class="flex items-center mb-4 md:flex-row-reverse">
+                                <span class="md:hidden w-10 h-10 bg-primary-600 rounded-full flex items-center justify-center text-white font-bold mr-4">5</span>
+                                <div>
+                                    <h3 class="font-bold text-xl">Doctor Consultation</h3>
+                                    <p class="text-gray-500 text-sm">Report Analysis &amp; Review</p>
+                                </div>
+                            </div>
+                            <div class="mb-4 p-4 bg-primary-50 rounded-xl">
+                                <h4 class="font-bold text-primary-700 mb-2">Morning (9:00 AM - 12:00 PM)</h4>
+                                <ul class="text-sm text-gray-600 space-y-1">
+                                    <li>• Receive comprehensive medical report</li>
+                                    <li>• One-on-one with your doctor</li>
+                                    <li>• Review all imaging and lab results</li>
+                                    <li>• Personalized health recommendations</li>
+                                </ul>
+                            </div>
+                            <div class="p-4 bg-secondary-50 rounded-xl">
+                                <h4 class="font-bold text-secondary-700 mb-2">Afternoon Options</h4>
+                                <ul class="text-sm text-gray-600 space-y-1">
+                                    <li>• Shanghai Museum</li>
+                                    <li>• TCM consultation</li>
+                                    <li>• Shopping at Xintiandi</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Day 6-7 -->
+                <div class="relative scroll-reveal">
+                    <div class="hidden md:block absolute left-1/2 transform -translate-x-1/2 w-16 h-16 bg-gray-800 rounded-full flex items-center justify-center text-white font-bold text-xl z-10 border-4 border-white">6-7</div>
+                    <div class="md:w-5/12 md:ml-auto md:pl-12">
+                        <div class="day-card p-6 rounded-2xl border border-gray-200">
+                            <div class="flex items-center mb-4">
+                                <span class="md:hidden w-10 h-10 bg-gray-800 rounded-full flex items-center justify-center text-white font-bold mr-4">6-7</span>
+                                <div>
+                                    <h3 class="font-bold text-xl">Departure or Extend</h3>
+                                    <p class="text-gray-500 text-sm">Your Choice</p>
+                                </div>
+                            </div>
+                            <div class="mb-4">
+                                <h4 class="font-bold text-gray-700 mb-2">Option A: Return Home</h4>
+                                <p class="text-sm text-gray-600">Private transfer to airport. Fly home with your health report and unforgettable memories!</p>
+                            </div>
+                            <div class="p-4 bg-gradient-to-r from-secondary-50 to-primary-50 rounded-xl">
+                                <h4 class="font-bold text-secondary-700 mb-2">Option B: Extend Your Journey</h4>
+                                <p class="text-sm text-gray-600 mb-2">Many patients add extra days to explore more:</p>
+                                <ul class="text-sm text-gray-500 space-y-1">
+                                    <li>• <strong>Beijing:</strong> Great Wall, Forbidden City (2-3 days)</li>
+                                    <li>• <strong>Hangzhou:</strong> West Lake, tea plantations (1-2 days)</li>
+                                    <li>• <strong>Chengdu:</strong> Giant pandas, spicy food (2 days)</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- What's Included -->
+    <section class="py-24 bg-white">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-16 scroll-reveal">
+                <h2 class="font-serif text-4xl font-bold text-medical-900 mb-4">What&#39;s Included</h2>
+                <p class="text-xl text-gray-600">Everything you need for a worry-free experience</p>
+            </div>
+
+            <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+                <div class="p-6 bg-primary-50 rounded-2xl scroll-reveal">
+                    <div class="w-12 h-12 bg-primary-100 rounded-xl flex items-center justify-center mb-4">
+                        <i class="fas fa-hotel text-primary-600 text-xl"></i>
+                    </div>
+                    <h3 class="font-bold mb-2">Accommodation</h3>
+                    <p class="text-gray-600 text-sm">4-star or 5-star hotel near hospital with breakfast included</p>
+                </div>
+
+                <div class="p-6 bg-secondary-50 rounded-2xl scroll-reveal">
+                    <div class="w-12 h-12 bg-secondary-100 rounded-xl flex items-center justify-center mb-4">
+                        <i class="fas fa-car text-secondary-600 text-xl"></i>
+                    </div>
+                    <h3 class="font-bold mb-2">Transportation</h3>
+                    <p class="text-gray-600 text-sm">Airport pick-up/drop-off, all hospital transfers, and tour transport</p>
+                </div>
+
+                <div class="p-6 bg-accent-50 rounded-2xl scroll-reveal">
+                    <div class="w-12 h-12 bg-accent-100 rounded-xl flex items-center justify-center mb-4">
+                        <i class="fas fa-language text-accent-600 text-xl"></i>
+                    </div>
+                    <h3 class="font-bold mb-2">Translation</h3>
+                    <p class="text-gray-600 text-sm">English-speaking coordinator and medical translator throughout</p>
+                </div>
+
+                <div class="p-6 bg-green-50 rounded-2xl scroll-reveal">
+                    <div class="w-12 h-12 bg-green-100 rounded-xl flex items-center justify-center mb-4">
+                        <i class="fas fa-map-marked-alt text-green-600 text-xl"></i>
+                    </div>
+                    <h3 class="font-bold mb-2">Tours</h3>
+                    <p class="text-gray-600 text-sm">Guided Shanghai sightseeing with entrance fees included</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Travel &amp; Stay -->
+    <section class="py-24 bg-gradient-to-br from-blue-50 via-white to-indigo-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-16 scroll-reveal">
+                <h2 class="font-serif text-4xl font-bold text-medical-900 mb-4">Travel &amp; Stay</h2>
+                <p class="text-xl text-gray-600">Rest and recover in comfort — handpicked accommodations near top medical facilities</p>
+            </div>
+
+            <div class="grid md:grid-cols-2 gap-8">
+                <div class="bg-white rounded-3xl overflow-hidden shadow-lg scroll-reveal">
+                    <img src="https://images.unsplash.com/photo-1566073771259-6a8506099945?w=800" alt="4-Star Hotel" class="w-full h-56 object-cover"/>
+                    <div class="p-6">
+                        <div class="flex items-center justify-between mb-3">
+                            <h3 class="font-bold text-xl text-medical-900">4-Star Comfort</h3>
+                            <span class="px-3 py-1 bg-blue-100 text-blue-700 rounded-full text-sm font-medium">Essential</span>
+                        </div>
+                        <p class="text-gray-600 mb-4">Modern, well-appointed hotels within 10 minutes of your medical center.</p>
+                        <ul class="space-y-2 text-sm text-gray-600">
+                            <li class="flex items-center"><i class="fas fa-check text-blue-500 mr-2"></i>Daily breakfast buffet</li>
+                            <li class="flex items-center"><i class="fas fa-check text-blue-500 mr-2"></i>Airport shuttle service</li>
+                            <li class="flex items-center"><i class="fas fa-check text-blue-500 mr-2"></i>English-speaking staff</li>
+                            <li class="flex items-center"><i class="fas fa-check text-blue-500 mr-2"></i>Walking distance to metro</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="bg-white rounded-3xl overflow-hidden shadow-lg scroll-reveal">
+                    <img src="https://images.unsplash.com/photo-1582719508461-905c673771fd?w=800" alt="5-Star Hotel" class="w-full h-56 object-cover"/>
+                    <div class="p-6">
+                        <div class="flex items-center justify-between mb-3">
+                            <h3 class="font-bold text-xl text-medical-900">5-Star Luxury</h3>
+                            <span class="px-3 py-1 bg-amber-100 text-amber-700 rounded-full text-sm font-medium">Premium</span>
+                        </div>
+                        <p class="text-gray-600 mb-4">Indulge in world-class hospitality at internationally renowned hotels.</p>
+                        <ul class="space-y-2 text-sm text-gray-600">
+                            <li class="flex items-center"><i class="fas fa-check text-amber-500 mr-2"></i>Executive lounge access</li>
+                            <li class="flex items-center"><i class="fas fa-check text-amber-500 mr-2"></i>Spa &amp; wellness center</li>
+                            <li class="flex items-center"><i class="fas fa-check text-amber-500 mr-2"></i>In-room dining &amp; concierge</li>
+                            <li class="flex items-center"><i class="fas fa-check text-amber-500 mr-2"></i>Premium location &amp; views</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Culture &amp; Sightseeing -->
+    <section class="py-24 bg-gradient-to-br from-amber-50 via-white to-red-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-16 scroll-reveal">
+                <h2 class="font-serif text-4xl font-bold text-medical-900 mb-4">Culture &amp; Sightseeing</h2>
+                <p class="text-xl text-gray-600">Authentic encounters with China&#39;s living heritage</p>
+            </div>
+
+            <div class="grid md:grid-cols-3 gap-6">
+                <div class="bg-white rounded-2xl overflow-hidden shadow-lg scroll-reveal">
+                    <img src="https://images.unsplash.com/photo-1545167496-31b3d3e27358?w=600" alt="Tea Ceremony" class="w-full h-48 object-cover"/>
+                    <div class="p-6">
+                        <h3 class="font-bold text-lg mb-2">Traditional Tea Ceremony</h3>
+                        <p class="text-gray-600 text-sm mb-3">Learn the art of Chinese tea from a master. Discover the history and brewing techniques.</p>
+                        <span class="px-2 py-1 bg-green-100 text-green-700 rounded text-xs">Included in Premium</span>
+                    </div>
+                </div>
+
+                <div class="bg-white rounded-2xl overflow-hidden shadow-lg scroll-reveal">
+                    <img src="https://images.unsplash.com/photo-1513622470522-26c3c8a854bc?w=600" alt="Acupuncture" class="w-full h-48 object-cover"/>
+                    <div class="p-6">
+                        <h3 class="font-bold text-lg mb-2">TCM Wellness Session</h3>
+                        <p class="text-gray-600 text-sm mb-3">Experience Traditional Chinese Medicine with a consultation from a licensed practitioner.</p>
+                        <span class="px-2 py-1 bg-green-100 text-green-700 rounded text-xs">Included</span>
+                    </div>
+                </div>
+
+                <div class="bg-white rounded-2xl overflow-hidden shadow-lg scroll-reveal">
+                    <img src="https://images.unsplash.com/photo-1555212697-194d092e3b8f?w=600" alt="Night Market" class="w-full h-48 object-cover"/>
+                    <div class="p-6">
+                        <h3 class="font-bold text-lg mb-2">Night Market Food Tour</h3>
+                        <p class="text-gray-600 text-sm mb-3">Explore Shanghai&#39;s vibrant night markets. Sample street food delicacies.</p>
+                        <span class="px-2 py-1 bg-green-100 text-green-700 rounded text-xs">Included</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="mt-12 bg-gradient-to-r from-red-600 to-amber-600 rounded-3xl p-8 text-white scroll-reveal">
+                <div class="flex flex-col md:flex-row items-center justify-between gap-6">
+                    <div>
+                        <h3 class="font-bold text-2xl mb-2">Want to Extend Your Stay?</h3>
+                        <p class="text-white/90">Many patients add 2-3 extra days to explore Beijing, Hangzhou, or other destinations.</p>
+                    </div>
+                    <a href="index.html#contact" class="px-6 py-3 bg-white text-red-600 rounded-full font-semibold hover:bg-gray-100 transition whitespace-nowrap">
+                        Ask About Extensions
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="py-24 bg-gradient-to-br from-primary-900 via-secondary-900 to-accent-900 text-white relative overflow-hidden">
+        <div class="absolute inset-0 opacity-10">
+            <div class="absolute inset-0" style="background-image: radial-gradient(circle at 2px 2px, rgba(255,255,255,0.15) 1px, transparent 0); background-size: 40px 40px;"></div>
+        </div>
+        
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center relative scroll-reveal">
+            <h2 class="font-serif text-4xl lg:text-5xl font-bold mb-6">Ready for Your Journey?</h2>
+            <p class="text-xl text-white/80 mb-8">Combine world-class healthcare with an unforgettable China experience. Your body and soul will thank you.</p>
+            <div class="flex flex-col sm:flex-row gap-4 justify-center">
+                <a href="index.html#contact" class="px-8 py-4 bg-white text-primary-900 rounded-full font-semibold text-lg hover:bg-gray-100 transition shadow-xl">
+                    Plan My Journey
+                </a>
+                <a href="index.html" class="px-8 py-4 border-2 border-white text-white rounded-full font-semibold text-lg hover:bg-white/10 transition">
+                    Back to Home
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-medical-900 text-gray-400 py-12">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex flex-col md:flex-row justify-between items-center">
+                <div class="flex items-center space-x-2 mb-4 md:mb-0">
+                    <div class="w-8 h-8 bg-primary-600 rounded-lg flex items-center justify-center text-white font-bold">C</div>
+                    <span class="font-serif text-xl font-bold text-white">CareBridge<span class="text-primary-500">China</span></span>
+                </div>
+                <div class="text-sm">© 2026 CareBridgeChina. All rights reserved.</div>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => { if (entry.isIntersecting) entry.target.classList.add('active'); });
+        }, { threshold: 0.1 });
+        document.querySelectorAll('.scroll-reveal').forEach((el) => observer.observe(el));
+    </script>
+
+
+</body></html>
