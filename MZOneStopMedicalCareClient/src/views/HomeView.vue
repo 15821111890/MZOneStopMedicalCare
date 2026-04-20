@@ -140,24 +140,16 @@
 import { computed } from 'vue';
 import { RouterLink } from 'vue-router';
 import { useI18n } from 'vue-i18n';
+import { useMessages } from '@/i18n';
 import ContactForm from '@/components/ContactForm.vue';
 
-const { t, tm, rt } = useI18n();
+const { t } = useI18n();
+const m = useMessages();
 
-const stats = computed(() =>
-  (tm('home.stats') as unknown as { value: string; label: string }[]).map((s) => ({
-    value: rt(s.value),
-    label: rt(s.label)
-  }))
-);
+const stats = computed(() => m.value.home.stats);
 const statColors = ['text-primary-600', 'text-secondary-600', 'text-accent-600', 'text-primary-600'];
 
-const services = computed(() =>
-  (tm('home.services') as unknown as { title: string; desc: string }[]).map((s) => ({
-    title: rt(s.title),
-    desc: rt(s.desc)
-  }))
-);
+const services = computed(() => m.value.home.services);
 
 const serviceStyles = [
   { icon: 'fa-solid fa-stethoscope', iconClass: 'bg-primary-100 text-primary-600' },
@@ -168,7 +160,5 @@ const serviceStyles = [
   { icon: 'fa-solid fa-heart-pulse', iconClass: 'bg-indigo-100 text-indigo-600' }
 ];
 
-const journeyTags = computed(() =>
-  (tm('home.journeyTags') as unknown as string[]).map((s) => rt(s))
-);
+const journeyTags = computed(() => m.value.home.journeyTags);
 </script>

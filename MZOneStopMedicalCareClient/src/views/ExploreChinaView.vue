@@ -188,8 +188,10 @@
 import { computed } from 'vue';
 import { RouterLink } from 'vue-router';
 import { useI18n } from 'vue-i18n';
+import { useMessages } from '@/i18n';
 
-const { t, tm, rt } = useI18n();
+const { t } = useI18n();
+const m = useMessages();
 
 const highlightImgs = [
   'https://images.unsplash.com/photo-1548919973-5cef591cdbc9?auto=format&fit=crop&w=1200&q=80',
@@ -200,12 +202,7 @@ const highlightImgs = [
   'https://images.unsplash.com/photo-1550966871-3ed3c47e2ce2?auto=format&fit=crop&w=1200&q=80'
 ];
 
-const highlights = computed(() =>
-  (tm('explore.highlights') as unknown as { title: string; desc: string }[]).map((s) => ({
-    title: rt(s.title),
-    desc: rt(s.desc)
-  }))
-);
+const highlights = computed(() => m.value.explore.highlights);
 
 const experienceImgs = [
   'https://images.unsplash.com/photo-1545167496-31b3d3e27358?auto=format&fit=crop&w=1200&q=80',
@@ -217,14 +214,7 @@ const experienceImgs = [
 ];
 const experienceIncluded = [true, true, true, false, false, true];
 
-const experiences = computed(() =>
-  (tm('explore.experiences') as unknown as { title: string; desc: string; duration: string; location: string }[]).map((s) => ({
-    title: rt(s.title),
-    desc: rt(s.desc),
-    duration: rt(s.duration),
-    location: rt(s.location)
-  }))
-);
+const experiences = computed(() => m.value.explore.experiences);
 
 const destinationImgs = [
   'https://images.unsplash.com/photo-1508804185872-d7badad00f7d?auto=format&fit=crop&w=1200&q=80',
@@ -233,15 +223,7 @@ const destinationImgs = [
   'https://images.unsplash.com/photo-1537531383496-f4749b8032cf?auto=format&fit=crop&w=1200&q=80'
 ];
 
-const destinations = computed(() =>
-  (tm('explore.destinations') as unknown as { title: string; desc: string; duration: string; price: string; badge: string }[]).map((s) => ({
-    title: rt(s.title),
-    desc: rt(s.desc),
-    duration: rt(s.duration),
-    price: rt(s.price),
-    badge: rt(s.badge)
-  }))
-);
+const destinations = computed(() => m.value.explore.destinations);
 
 const hotelImgs = [
   'https://images.unsplash.com/photo-1566073771259-6a8506099945?auto=format&fit=crop&w=1200&q=80',
@@ -249,20 +231,8 @@ const hotelImgs = [
 ];
 const hotelBadgeClasses = ['bg-blue-100 text-blue-700', 'bg-amber-100 text-amber-700'];
 
-const hotels = computed(() =>
-  (tm('explore.hotels') as unknown as { title: string; desc: string; badge: string; amenities: string[] }[]).map((s) => ({
-    title: rt(s.title),
-    desc: rt(s.desc),
-    badge: rt(s.badge),
-    amenities: (s.amenities as unknown as string[]).map((a) => rt(a))
-  }))
-);
+const hotels = computed(() => m.value.explore.hotels);
 
-const safetyStats = computed(() =>
-  (tm('explore.safetyStats') as unknown as { value: string; label: string }[]).map((s) => ({
-    value: rt(s.value),
-    label: rt(s.label)
-  }))
-);
+const safetyStats = computed(() => m.value.explore.safetyStats);
 const safetyColors = ['text-emerald-600', 'text-primary-600', 'text-secondary-600', 'text-accent-600'];
 </script>

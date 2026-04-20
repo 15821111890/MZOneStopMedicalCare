@@ -167,19 +167,76 @@ curl http://127.0.0.1/api/medicine/health            # {"resCode":"00100000",...
 
 `/var/log/nginx/medicine_error.log` 会混入老应用 `/h5/...` 的 404 与根目录 `/favicon.ico` 的 404，与本项目无关，定位时按 `medicine-h5` 关键字过滤。
 
-### 13.6 新的一键重启姿势
+### 13.6 部署脚本入口（合并后）
 
-部署脚本 `script/deploy_restart_medical_project.python` 已新增两条捷径：
+原来的三个脚本（`deploy_restart_medical_project.python` / `gateway_route_patch.json` / `root_admin_initialize.py`）已合并为单个
+`MZOneStopMedicalCareDocument/script/deploy_mz_medicine_application.python`。
 
 ```bash
-# 日常 git pull 后，一键 pull + 重启 Server/Business/Client + 修权限 + 落地 curl 验证
-python3 MZOneStopMedicalCareDocument/script/deploy_restart_medical_project.python --restart-all
+# 默认一把梭：check → pull → server → business → client → nginx(snippet) → gateway → perms → seed_root → verify
+sudo python3 MZOneStopMedicalCareDocument/script/deploy_mz_medicine_application.python
 
-# 首次上线或改过 Nginx/Gateway 路由时，跑完整流程（含 Nginx 同步 / Gateway 路由 / root 初始化）
-python3 MZOneStopMedicalCareDocument/script/deploy_restart_medical_project.python --all
+# 只跑某几步（step key 跟上面顺序一致）
+sudo python3 MZOneStopMedicalCareDocument/script/deploy_mz_medicine_application.python --steps pull client perms verify
 ```
 
-`--restart-all` 内置的步骤（`pull` → `server` → `business` → `client` → `perms` → `verify`）已经把 13.1–13.2 的权限坑和 13.4 的验证 curl 自动化。若改动了 `nginx/medicine.conf` 或 Gateway 路由，需要跑一次 `--all` 或 `--steps nginx gateway`。
+前置条件：已先跑过 `MZDocument` 的 `deploy_mz_gateway.python`（提供 Nginx 基础配置 + ip_default.conf + MZGateway）。`nginx` 步骤同步的是
+**location 片段** `medicine.conf` → `/etc/nginx/snippets/medicine-h5.conf`，由 `ip_default.conf` 通过 `include` 拉入（见 13.7）。
+
+### 13.7 Nginx 布局变化（2026-04-20 重构）
+
+原来 `medicine.conf` 是独立的 `server { listen 80; ... }` 块，挂在 `sites-enabled/`。这会和 `MZDocument/nginx/ip_default.conf`
+的 `server_name _`（default_server）冲突 → `duplicate default_server`。
+
+新布局：
+
+- `MZOneStopMedicalCareDocument/nginx/medicine.conf` 只包含 `location /medicine-h5/client/`、`/medicine-h5/management/`、`/api/medicine/` 三个片段
+- 目标路径：`/etc/nginx/snippets/medicine-h5.conf`
+- 由 `MZDocument/nginx/ip_default.conf` 里的 `include /etc/nginx/snippets/medicine-h5.conf;` 引入
+- 部署脚本 `nginx` 步骤会检测旧版 `sites-available/medicine.conf` 并提示清理
+
+## 十四、前端国际化（i18n）
+
+### 14.1 vue-i18n `rt()` 陷阱（2026-04-20 线上发现）
+
+`tm()` + `rt()` 这组 API 在 `vue-i18n@9.13.x` 下不能通用。`rt()` 的内部实现只接受 `MessageFunction`（预编译过的消息函数）；
+我们的 locale 是普通 TS 对象、字符串里没有 `{}` 插值，`tm()` 返回的就是原始字符串。给 `rt()` 喂字符串 → `isMessageFunction` 校验失败 →
+抛 `INVALID_ARGUMENT`。渲染期 throw 会直接让整个 View 的 setup 失败，**首页只剩 Header/Footer、正文空白**（这正是第一次上线看到的症状）。
+
+**正确做法**：结构化/多语言数据不要走 `tm/rt`，走 `useMessages()` 直接读原始 locale：
+
+```ts
+// MZOneStopMedicalCareClient/src/i18n/index.ts
+export function useMessages() {
+  const { locale } = useI18n();
+  return computed(() => raw[locale.value as Locale]);  // raw = { en, zh }
+}
+
+// 视图里：
+const m = useMessages();
+const services = computed(() => m.value.home.services);
+```
+
+普通字符串文案继续用 `t('xxx.yyy')`。**只有**当取的是数组 / 嵌套对象时才换 `useMessages()`。
+
+### 14.2 国际化里需要保持稳定的字段
+
+需要后端比较 / 过滤 / 入库的字段保持英文枚举，只翻译展示层：
+
+- `medicalInterest`：前后端都存英文（`Health Screening` / `Dentistry` / `Cosmetic Surgery` / `Traditional Chinese Medicine` /
+  `CAR-T Cell Therapy` / `Advanced Treatments`）。Client 端 `<select>` 的 `value` 是英文、`label` 走 `services.*` 翻译；Business 端列表
+  筛选同理。
+- `status`：依然是数字 0/1/2；展示时 `leadStatusI18nKey(status)` 返回 `status.new/contacted/closed` 再 `t(...)`。
+
+不这么做的话，切到中文后新提交的数据会和历史英文数据 mismatch，后端检索（`$regex` / 精确匹配）会出错。
+
+### 14.3 语言切换器位置
+
+- Client（`MZOneStopMedicalCareClient`）：`SiteHeader.vue` 桌面端右侧 + 移动端折叠菜单都挂了 `LangSwitch`
+- Business（`MZOneStopMedicalCareBusiness`）：登录页右上角 + `AdminLayout` 侧边栏底部
+
+语言偏好分别存 `localStorage['medicine-client-lang']` / `localStorage['medicine-business-lang']`，首次访问按 `navigator.language`
+判断（`zh-*` → `zh`，否则 `en`）。
 
 ---
 

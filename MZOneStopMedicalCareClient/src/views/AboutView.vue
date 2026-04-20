@@ -174,28 +174,17 @@
 import { computed } from 'vue';
 import { RouterLink } from 'vue-router';
 import { useI18n } from 'vue-i18n';
+import { useMessages } from '@/i18n';
 
-const { t, tm, rt } = useI18n();
+const { t } = useI18n();
+const m = useMessages();
 
-const homeStats = computed(() =>
-  (tm('home.stats') as unknown as { value: string; label: string }[]).map((s) => ({
-    value: rt(s.value),
-    label: rt(s.label)
-  }))
-);
+const homeStats = computed(() => m.value.home.stats);
 const statColors = ['text-primary-600', 'text-secondary-600', 'text-accent-600', 'text-primary-600'];
 
-const journeyTags = computed(() =>
-  (tm('about.journeyTags') as unknown as string[]).map((s) => rt(s))
-);
+const journeyTags = computed(() => m.value.about.journeyTags);
 
-const services = computed(() =>
-  (tm('about.services') as unknown as { title: string; desc: string; badges: string[] }[]).map((s) => ({
-    title: rt(s.title),
-    desc: rt(s.desc),
-    badges: (s.badges as unknown as string[]).map((b) => rt(b))
-  }))
-);
+const services = computed(() => m.value.about.services);
 
 const serviceStyles = [
   { icon: 'fa-solid fa-stethoscope', iconClass: 'bg-primary-100 text-primary-600', cardClass: 'bg-gradient-to-br from-primary-50 to-white border-primary-100', badgeClass: 'bg-primary-100 text-primary-700' },
@@ -206,28 +195,12 @@ const serviceStyles = [
   { icon: 'fa-solid fa-heart-pulse', iconClass: 'bg-indigo-100 text-indigo-600', cardClass: 'bg-gradient-to-br from-indigo-50 to-white border-indigo-100', badgeClass: 'bg-indigo-100 text-indigo-700' }
 ];
 
-const whyStats = computed(() =>
-  (tm('about.whyStats') as unknown as { value: string; title: string; sub: string }[]).map((s) => ({
-    value: rt(s.value),
-    title: rt(s.title),
-    sub: rt(s.sub)
-  }))
-);
+const whyStats = computed(() => m.value.about.whyStats);
 const whyStatColors = ['text-primary-600', 'text-secondary-600', 'text-accent-600', 'text-indigo-600'];
 
-const steps = computed(() =>
-  (tm('about.steps') as unknown as { title: string; desc: string }[]).map((s) => ({
-    title: rt(s.title),
-    desc: rt(s.desc)
-  }))
-);
+const steps = computed(() => m.value.about.steps);
 
-const pillars = computed(() =>
-  (tm('about.pillars') as unknown as { title: string; desc: string }[]).map((s) => ({
-    title: rt(s.title),
-    desc: rt(s.desc)
-  }))
-);
+const pillars = computed(() => m.value.about.pillars);
 const pillarStyles = [
   { icon: 'fa-solid fa-hospital', iconClass: 'bg-primary-100 text-primary-600' },
   { icon: 'fa-solid fa-dollar-sign', iconClass: 'bg-secondary-100 text-secondary-600' },

@@ -1,0 +1,452 @@
+#!/usr/bin/env python3
+"""
+deploy_mz_medicine_application.python —— MZOneStopMedicalCare 三件套部署脚本
+
+定位：部署医疗一站式旅游项目（Server / Client / Business 三件套）。
+     前置：已跑过 MZDocument 的 deploy_mz_gateway.python，Nginx / Mongo / Redis /
+     MZGateway / ip_default.conf 均就绪；/etc/nginx/snippets/medicine-h5.conf
+     至少已有占位。
+
+在腾讯云 110.40.228.197 服务器上以 **root** 身份执行：
+
+    # 默认流程（一把梭）
+    python3 deploy_mz_medicine_application.python
+
+    # 只跑某步
+    python3 deploy_mz_medicine_application.python --steps server business
+
+覆盖动作（默认顺序）：
+  1. check      —— 检查 Mongo(27017) / Redis(6379) 可达
+  2. pull       —— monorepo git pull --ff-only
+  3. server     —— Server：npm install --production + pm2 startOrReload (fork)
+  4. business   —— Business H5：npm install + npm run build
+  5. client     —— Client H5：npm install + npm run build
+  6. nginx      —— medicine.conf 同步到 /etc/nginx/snippets/medicine-h5.conf + nginx reload
+  7. gateway    —— MZGateway routes.json 加 /api/medicine → :3003 + pm2 reload mz-gateway（幂等）
+  8. perms      —— /home/ubuntu 路径链 o+x + dist 递归 o+rX（Nginx www-data 可读）
+  9. seed_root  —— 初始化 medicalAdminUsers 的 root 管理员（幂等，已存在则跳过）
+ 10. verify     —— curl /api/medicine/health、/medicine-h5/client/、/medicine-h5/management/
+
+兼容 Python 3.8+，依赖 pymongo（由 gateway --install-base 装过）。
+"""
+from __future__ import annotations
+
+import argparse
+import hashlib
+import json
+import os
+import shutil
+import socket
+import subprocess
+import sys
+import uuid
+from pathlib import Path
+
+# ---------- 路径约定 ----------
+BASE_DIR = Path(os.environ.get("MZ_BASE_DIR", "/home/ubuntu/apps"))
+
+MONO_DIR = BASE_DIR / "MZOneStopMedicalCare"
+SERVER_DIR = MONO_DIR / "MZOneStopMedicalCareServer"
+BUSINESS_DIR = MONO_DIR / "MZOneStopMedicalCareBusiness"
+CLIENT_DIR = MONO_DIR / "MZOneStopMedicalCareClient"
+DOCUMENT_DIR = MONO_DIR / "MZOneStopMedicalCareDocument"
+
+CLIENT_DIST = CLIENT_DIR / "dist"
+BUSINESS_DIST = BUSINESS_DIR / "dist"
+
+# Nginx snippet（由 MZDocument/nginx/ip_default.conf include 进来）
+NGINX_TEMPLATE = DOCUMENT_DIR / "nginx" / "medicine.conf"
+NGINX_SNIPPET = Path("/etc/nginx/snippets/medicine-h5.conf")
+
+# 旧布局残留——若还挂着就提示清理
+NGINX_LEGACY_AVAIL = Path("/etc/nginx/sites-available/medicine.conf")
+NGINX_LEGACY_ENABLED = Path("/etc/nginx/sites-enabled/medicine.conf")
+
+# Gateway
+GATEWAY_DIR = BASE_DIR / "MZGateway"
+GATEWAY_ROUTES = GATEWAY_DIR / "src" / "config" / "routes.json"
+GATEWAY_PM2_NAME = "mz-gateway"
+
+MEDICINE_ROUTE = {
+    "name": "MZOneStopMedicalCareServer",
+    "prefix": "/api/medicine",
+    "target": "http://127.0.0.1:3003",
+    "stripPrefix": True,
+}
+
+# Nginx worker 需要穿透的目录链
+HOME_CHAIN = [Path("/home/ubuntu"), Path("/home/ubuntu/apps")]
+
+# Mongo / Redis
+MONGO_HOST = "127.0.0.1"
+MONGO_PORT = 27017
+REDIS_HOST = "127.0.0.1"
+REDIS_PORT = 6379
+
+# Root 管理员（医疗独立账号体系）
+MEDICAL_MONGO_URI = os.environ.get(
+    "MEDICAL_MONGO_URI", f"mongodb://{MONGO_HOST}:{MONGO_PORT}/mz_medical"
+)
+ROOT_COLLECTION = "medicalAdminUsers"
+ROOT_ACCOUNT = "root"
+ROOT_PASSWORD_PLAIN = "Medicine_rooter_123456"
+
+SERVER_PM2_NAME = "mz-medical-server"
+
+
+# ---------- 工具 ----------
+def info(msg: str) -> None:
+    print(f"\033[36m[info]\033[0m {msg}")
+
+
+def ok(msg: str) -> None:
+    print(f"\033[32m[ ok ]\033[0m {msg}")
+
+
+def warn(msg: str) -> None:
+    print(f"\033[33m[warn]\033[0m {msg}")
+
+
+def error(msg: str) -> None:
+    print(f"\033[31m[error]\033[0m {msg}")
+
+
+def run(cmd, cwd: Path | None = None, check: bool = True, capture: bool = False):
+    info("$ " + (" ".join(cmd) if isinstance(cmd, (list, tuple)) else cmd))
+    kwargs = {"cwd": str(cwd) if cwd else None, "shell": isinstance(cmd, str)}
+    if capture:
+        kwargs["capture_output"] = True
+        kwargs["text"] = True
+    result = subprocess.run(cmd, **kwargs)
+    if check and result.returncode != 0:
+        raise SystemExit(f"命令失败：{cmd}")
+    return result
+
+
+def have_cmd(name: str) -> bool:
+    return shutil.which(name) is not None
+
+
+def _ensure_env(project_dir: Path) -> None:
+    env_file = project_dir / ".env"
+    example = project_dir / ".env.example"
+    if env_file.exists():
+        info(f".env 已存在：{env_file}")
+        return
+    if example.exists():
+        shutil.copy(example, env_file)
+        warn(f"已从 .env.example 复制到 {env_file}，请按实际环境调整")
+    else:
+        warn(f"{project_dir} 没有 .env.example，跳过生成 .env")
+
+
+def _npm_install(target: Path, production: bool) -> None:
+    args = ["npm", "install"] + (["--production"] if production else [])
+    if subprocess.run(args, cwd=str(target)).returncode != 0:
+        warn("默认源失败，改用 npmmirror ...")
+        run(args + ["--registry=https://registry.npmmirror.com"], cwd=target)
+
+
+# ---------- 步骤：check ----------
+def _port_open(host: str, port: int, timeout: float = 2.0) -> bool:
+    try:
+        with socket.create_connection((host, port), timeout=timeout):
+            return True
+    except OSError:
+        return False
+
+
+def check_services() -> None:
+    failed = []
+    for label, host, port in (
+        ("MongoDB", MONGO_HOST, MONGO_PORT),
+        ("Redis", REDIS_HOST, REDIS_PORT),
+    ):
+        if _port_open(host, port):
+            ok(f"{label} {host}:{port} 可达")
+        else:
+            error(f"{label} {host}:{port} 不可达")
+            failed.append(label)
+    if failed:
+        warn(
+            "基础服务未就绪：" + ", ".join(failed)
+            + "。请先跑 MZDocument 的 deploy_mz_gateway.python --install-base"
+        )
+
+
+# ---------- 步骤：pull ----------
+def pull_monorepo() -> None:
+    if not (MONO_DIR / ".git").exists():
+        error(f"{MONO_DIR} 不是 git 工作区，请先 clone")
+        raise SystemExit(2)
+    result = run(["git", "status", "--porcelain"], cwd=MONO_DIR, capture=True)
+    if result.stdout.strip():
+        warn("存在未提交的本地改动；继续执行 git pull --ff-only，冲突请手动处理")
+    run(["git", "pull", "--ff-only"], cwd=MONO_DIR)
+
+
+# ---------- 步骤：server / business / client ----------
+def deploy_server() -> None:
+    if not SERVER_DIR.exists():
+        error(f"未找到 {SERVER_DIR}")
+        return
+    _ensure_env(SERVER_DIR)
+    _npm_install(SERVER_DIR, production=True)
+    if have_cmd("pm2"):
+        run(
+            ["pm2", "startOrReload", "ecosystem.config.js", "--env", "production"],
+            cwd=SERVER_DIR,
+        )
+        run(["pm2", "save"], check=False)
+    else:
+        warn("未检测到 pm2，跳过服务启动")
+
+
+def _build_vue(project_dir: Path) -> None:
+    if not project_dir.exists():
+        error(f"未找到 {project_dir}")
+        return
+    _ensure_env(project_dir)
+    _npm_install(project_dir, production=False)
+    run(["npm", "run", "build"], cwd=project_dir)
+
+
+def deploy_business() -> None:
+    _build_vue(BUSINESS_DIR)
+
+
+def deploy_client() -> None:
+    _build_vue(CLIENT_DIR)
+
+
+# ---------- 步骤：nginx（snippet 同步） ----------
+def sync_nginx() -> None:
+    if not NGINX_TEMPLATE.exists():
+        warn(f"未找到 {NGINX_TEMPLATE}，跳过 Nginx 同步")
+        return
+
+    if NGINX_LEGACY_ENABLED.exists() or NGINX_LEGACY_AVAIL.exists():
+        warn(
+            "检测到旧版 /etc/nginx/sites-*/medicine.conf（独立 server 块）。"
+            "请先在 MZDocument 跑："
+        )
+        warn("  python3 /home/ubuntu/apps/MZDocument/script/deploy_mz_gateway.python --steps sync_nginx")
+        warn("它会启用 ip_default.conf 并清理旧 sites-enabled/medicine.conf。")
+
+    try:
+        subprocess.run(["sudo", "mkdir", "-p", str(NGINX_SNIPPET.parent)], check=True)
+
+        same = False
+        try:
+            if NGINX_SNIPPET.exists() and (
+                NGINX_SNIPPET.read_text() == NGINX_TEMPLATE.read_text()
+            ):
+                same = True
+        except PermissionError:
+            pass
+
+        if same:
+            info(f"{NGINX_SNIPPET} 已与模板一致")
+        else:
+            info(f"写入 {NGINX_SNIPPET}")
+            subprocess.run(
+                ["sudo", "cp", str(NGINX_TEMPLATE), str(NGINX_SNIPPET)],
+                check=True,
+            )
+
+        subprocess.run(["sudo", "nginx", "-t"], check=True)
+        subprocess.run(["sudo", "systemctl", "reload", "nginx"], check=True)
+        ok("Nginx 已 reload（snippet 更新完成）")
+    except subprocess.CalledProcessError as exc:
+        error(f"Nginx 同步失败：{exc}")
+
+
+# ---------- 步骤：gateway ----------
+def sync_gateway_route() -> None:
+    if not GATEWAY_ROUTES.exists():
+        warn(f"未找到 {GATEWAY_ROUTES}（是否跑过 deploy_mz_gateway.python？），跳过")
+        return
+
+    data = json.loads(GATEWAY_ROUTES.read_text(encoding="utf-8"))
+    routes = data.get("routes", [])
+    existing = next(
+        (
+            r for r in routes
+            if r.get("prefix") == MEDICINE_ROUTE["prefix"]
+            or r.get("name") == MEDICINE_ROUTE["name"]
+        ),
+        None,
+    )
+    changed = False
+    if existing is None:
+        routes.append(MEDICINE_ROUTE)
+        data["routes"] = routes
+        changed = True
+        info(f"追加 /api/medicine 路由到 {GATEWAY_ROUTES}")
+    else:
+        for key in ("name", "target", "stripPrefix"):
+            if existing.get(key) != MEDICINE_ROUTE[key]:
+                existing[key] = MEDICINE_ROUTE[key]
+                changed = True
+        if changed:
+            info("更新 Gateway 中现有 /api/medicine 路由定义")
+
+    if changed:
+        GATEWAY_ROUTES.write_text(
+            json.dumps(data, indent=2, ensure_ascii=False) + "\n",
+            encoding="utf-8",
+        )
+        if have_cmd("pm2"):
+            run(["pm2", "reload", GATEWAY_PM2_NAME], check=False)
+    else:
+        info("Gateway routes.json 已包含 /api/medicine，无需变更")
+
+
+# ---------- 步骤：perms ----------
+def fix_permissions() -> None:
+    """Nginx worker（www-data）需要穿透 /home/ubuntu 并读 dist。
+    踩坑记录：权限不足会导致 "rewrite or internal redirection cycle" 500。
+    """
+    try:
+        for p in HOME_CHAIN:
+            if p.exists():
+                subprocess.run(["sudo", "chmod", "o+x", str(p)], check=True)
+                info(f"chmod o+x {p}")
+        for dist in (CLIENT_DIST, BUSINESS_DIST):
+            if dist.exists():
+                subprocess.run(["sudo", "chmod", "-R", "o+rX", str(dist)], check=True)
+                info(f"chmod -R o+rX {dist}")
+            else:
+                warn(f"未找到 {dist}（先跑 client / business 构建再修权限）")
+        for dist in (CLIENT_DIST, BUSINESS_DIST):
+            idx = dist / "index.html"
+            if idx.exists():
+                r = subprocess.run(
+                    ["sudo", "-u", "www-data", "stat", str(idx)],
+                    capture_output=True, text=True,
+                )
+                if r.returncode == 0:
+                    ok(f"www-data 可读 {idx}")
+                else:
+                    error(f"www-data 仍无法访问 {idx}: {r.stderr.strip()}")
+    except subprocess.CalledProcessError as exc:
+        error(f"权限修复失败：{exc}")
+
+
+# ---------- 步骤：seed_root ----------
+def seed_root_admin() -> None:
+    """初始化 medicalAdminUsers 的 root 管理员。幂等（已存在则跳过）。"""
+    try:
+        from pymongo import MongoClient, ASCENDING
+    except ImportError:
+        error("未找到 pymongo。请跑：sudo pip3 install pymongo --break-system-packages")
+        return
+
+    info(f"连接 {MEDICAL_MONGO_URI}")
+    client = MongoClient(MEDICAL_MONGO_URI, serverSelectionTimeoutMS=5000)
+    try:
+        client.server_info()
+    except Exception as exc:
+        error(f"Mongo 连接失败：{exc}")
+        return
+
+    db = client.get_default_database()
+    coll = db[ROOT_COLLECTION]
+    coll.create_index([("memberId", ASCENDING)], unique=True)
+    coll.create_index([("account", ASCENDING)], unique=True)
+
+    if coll.find_one({"account": ROOT_ACCOUNT}):
+        ok(f"root 账号已存在，跳过初始化（{db.name}.{ROOT_COLLECTION}）")
+        return
+
+    doc = {
+        "memberId": str(uuid.uuid4()),
+        "account": ROOT_ACCOUNT,
+        "password": hashlib.md5(ROOT_PASSWORD_PLAIN.encode("utf-8")).hexdigest(),
+        "nickName": "Root Admin",
+        "roleType": 1,
+        "status": 1,
+    }
+    coll.insert_one(doc)
+    ok(f"已写入医疗 root 管理员 memberId={doc['memberId']}")
+
+
+# ---------- 步骤：verify ----------
+def _curl_code(url: str) -> str:
+    r = subprocess.run(
+        ["curl", "-sS", "-o", "/dev/null", "-w", "%{http_code}", "--max-time", "5", url],
+        capture_output=True, text=True,
+    )
+    return r.stdout.strip() or "?"
+
+
+def verify() -> None:
+    if not have_cmd("curl"):
+        warn("curl 未装，跳过验证")
+        return
+    checks = [
+        ("经 Nginx /api/medicine/health", "http://127.0.0.1/api/medicine/health"),
+        ("Client /medicine-h5/client/", "http://127.0.0.1/medicine-h5/client/"),
+        ("Business /medicine-h5/management/", "http://127.0.0.1/medicine-h5/management/"),
+    ]
+    for label, url in checks:
+        code = _curl_code(url)
+        if code.startswith("2") or code == "401":
+            ok(f"{label}: HTTP {code}")
+        else:
+            warn(f"{label}: HTTP {code}")
+
+
+# ---------- 编排 ----------
+STEPS = {
+    "check": check_services,
+    "pull": pull_monorepo,
+    "server": deploy_server,
+    "business": deploy_business,
+    "client": deploy_client,
+    "nginx": sync_nginx,
+    "gateway": sync_gateway_route,
+    "perms": fix_permissions,
+    "seed_root": seed_root_admin,
+    "verify": verify,
+}
+DEFAULT_ORDER = [
+    "check", "pull", "server", "business", "client",
+    "nginx", "gateway", "perms", "seed_root", "verify",
+]
+
+
+def run_steps(keys) -> None:
+    for k in keys:
+        step = STEPS.get(k)
+        if step is None:
+            warn(f"未知步骤 {k}（候选：{', '.join(STEPS.keys())}）")
+            continue
+        info(f"==== {k} ====")
+        step()
+    ok("Done.")
+
+
+def main() -> None:
+    parser = argparse.ArgumentParser(description="MZOneStopMedicalCare 部署脚本")
+    parser.add_argument(
+        "--steps",
+        nargs="+",
+        metavar="STEP",
+        help=f"只跑指定步骤（候选：{', '.join(STEPS.keys())}）",
+    )
+    args = parser.parse_args()
+
+    if args.steps:
+        run_steps(args.steps)
+    else:
+        run_steps(DEFAULT_ORDER)
+
+
+if __name__ == "__main__":
+    try:
+        main()
+    except KeyboardInterrupt:
+        print()
+        error("已中断")
+        sys.exit(130)

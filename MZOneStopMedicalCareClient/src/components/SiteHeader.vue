@@ -81,11 +81,13 @@
 import { computed, ref } from 'vue';
 import { RouterLink, useRoute } from 'vue-router';
 import { useI18n } from 'vue-i18n';
+import { useMessages } from '@/i18n';
 import LangSwitch from '@/components/LangSwitch.vue';
 
 const route = useRoute();
 const mobileOpen = ref(false);
-const { t, tm, rt } = useI18n();
+const { t } = useI18n();
+const m = useMessages();
 
 const links = computed(() => [
   { to: '/', label: t('header.nav.home') },
@@ -95,9 +97,7 @@ const links = computed(() => [
   { to: '/medical-journey', label: t('header.nav.journey') }
 ]);
 
-const services = computed(() =>
-  (tm('header.servicesMenu') as unknown as string[]).map((s) => rt(s))
-);
+const services = computed(() => m.value.header.servicesMenu);
 
 function isActive(to: string) {
   if (to === '/') return route.path === '/';

@@ -149,38 +149,21 @@
 import { computed } from 'vue';
 import { RouterLink } from 'vue-router';
 import { useI18n } from 'vue-i18n';
+import { useMessages } from '@/i18n';
 
-const { t, tm, rt } = useI18n();
+const { t } = useI18n();
+const m = useMessages();
 
-const specialCards = computed(() =>
-  (tm('journey.specialCards') as unknown as { title: string; desc: string }[]).map((s) => ({
-    title: rt(s.title),
-    desc: rt(s.desc)
-  }))
-);
+const specialCards = computed(() => m.value.journey.specialCards);
 const specialStyles = [
   { icon: 'fa-solid fa-heart-pulse', iconClass: 'bg-primary-100 text-primary-600', cardClass: 'bg-gradient-to-br from-primary-50 to-white' },
   { icon: 'fa-solid fa-landmark', iconClass: 'bg-secondary-100 text-secondary-600', cardClass: 'bg-gradient-to-br from-secondary-50 to-white' },
   { icon: 'fa-solid fa-concierge-bell', iconClass: 'bg-accent-100 text-accent-600', cardClass: 'bg-gradient-to-br from-accent-50 to-white' }
 ];
 
-interface DaySection { title: string; items: string[] }
-interface Day { marker: string; title: string; desc?: string; items?: string[]; sections?: DaySection[] }
-
-const days = computed<Day[]>(() =>
-  (tm('journey.days') as unknown as Day[]).map((d) => ({
-    marker: rt(d.marker),
-    title: rt(d.title),
-    desc: d.desc ? rt(d.desc) : undefined,
-    items: d.items ? (d.items as unknown as string[]).map((x) => rt(x)) : undefined,
-    sections: d.sections
-      ? (d.sections as unknown as DaySection[]).map((sec) => ({
-          title: rt(sec.title),
-          items: (sec.items as unknown as string[]).map((x) => rt(x))
-        }))
-      : undefined
-  }))
-);
+interface DaySection { title: string; items: readonly string[] }
+interface Day { marker: string; title: string; desc?: string; items?: readonly string[]; sections?: readonly DaySection[] }
+const days = computed<readonly Day[]>(() => m.value.journey.days as unknown as Day[]);
 const dayDotClasses = [
   'bg-medical-700',
   'bg-primary-600',
@@ -191,12 +174,7 @@ const dayDotClasses = [
   'bg-medical-700'
 ];
 
-const included = computed(() =>
-  (tm('journey.included') as unknown as { title: string; desc: string }[]).map((s) => ({
-    title: rt(s.title),
-    desc: rt(s.desc)
-  }))
-);
+const included = computed(() => m.value.journey.included);
 const includedStyles = [
   { icon: 'fa-solid fa-hotel', iconClass: 'bg-primary-100 text-primary-600', cardClass: 'bg-primary-50' },
   { icon: 'fa-solid fa-car', iconClass: 'bg-secondary-100 text-secondary-600', cardClass: 'bg-secondary-50' },

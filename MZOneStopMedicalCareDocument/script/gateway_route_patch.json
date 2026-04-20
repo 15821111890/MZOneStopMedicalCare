@@ -1,7 +1,0 @@
-{
-  "_comment": "追加此 route 到 MZGateway/src/config/routes.json 的 routes 数组里。",
-  "name": "MZOneStopMedicalCareServer",
-  "prefix": "/api/medicine",
-  "target": "http://127.0.0.1:3003",
-  "stripPrefix": true
-}

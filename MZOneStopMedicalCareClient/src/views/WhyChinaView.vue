@@ -168,46 +168,19 @@
 import { computed } from 'vue';
 import { RouterLink } from 'vue-router';
 import { useI18n } from 'vue-i18n';
+import { useMessages } from '@/i18n';
 
-const { t, tm, rt } = useI18n();
+const { t } = useI18n();
+const m = useMessages();
 
-const valueItems = computed(() =>
-  (tm('whyChina.valueItems') as unknown as { label: string; price: string; compare: string }[]).map((s) => ({
-    label: rt(s.label),
-    price: rt(s.price),
-    compare: rt(s.compare)
-  }))
-);
-
-const accessItems = computed(() =>
-  (tm('whyChina.accessItems') as unknown as string[]).map((s) => rt(s))
-);
-
-const innovationStats = computed(() =>
-  (tm('whyChina.innovationStats') as unknown as { value: string; label: string }[]).map((s) => ({
-    value: rt(s.value),
-    label: rt(s.label)
-  }))
-);
-
-const facilitiesItems = computed(() =>
-  (tm('whyChina.facilitiesItems') as unknown as string[]).map((s) => rt(s))
-);
+const valueItems = computed(() => m.value.whyChina.valueItems);
+const accessItems = computed(() => m.value.whyChina.accessItems);
+const innovationStats = computed(() => m.value.whyChina.innovationStats);
+const facilitiesItems = computed(() => m.value.whyChina.facilitiesItems);
 const facilityIcons = ['fa-certificate', 'fa-robot', 'fa-brain', 'fa-user-md'];
-
-const shanghaiParas = computed(() =>
-  (tm('whyChina.shanghaiParas') as unknown as string[]).map((s) => rt(s))
-);
-const shanghaiTags = computed(() =>
-  (tm('whyChina.shanghaiTags') as unknown as string[]).map((s) => rt(s))
-);
-
-const cultureCards = computed(() =>
-  (tm('whyChina.culture') as unknown as { title: string; desc: string }[]).map((s) => ({
-    title: rt(s.title),
-    desc: rt(s.desc)
-  }))
-);
+const shanghaiParas = computed(() => m.value.whyChina.shanghaiParas);
+const shanghaiTags = computed(() => m.value.whyChina.shanghaiTags);
+const cultureCards = computed(() => m.value.whyChina.culture);
 const cultureStyles = [
   { icon: 'fa-solid fa-landmark', iconClass: 'bg-amber-100 text-amber-600', cardClass: 'bg-amber-50 border-amber-100' },
   { icon: 'fa-solid fa-utensils', iconClass: 'bg-rose-100 text-rose-600', cardClass: 'bg-rose-50 border-rose-100' },
