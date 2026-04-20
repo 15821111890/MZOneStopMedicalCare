@@ -104,6 +104,62 @@
 - B 端后续可能需要：筛选状态、导出 CSV、数据看板、权限细分
 - 暂未加请求限流 / 图形验证码，C 端留资接口如对外暴露需加反刷防护
 
+## 十三、服务器部署踩坑记录（2026-04-20 首次上线）
+
+### 13.1 服务器实际落地路径
+
+monorepo 克隆到 `/home/ubuntu/apps/MZOneStopMedicalCare/`，子项目在其**下一层**：
+
+```
+/home/ubuntu/apps/MZOneStopMedicalCare/
+├── MZOneStopMedicalCareClient/dist/
+├── MZOneStopMedicalCareBusiness/dist/
+├── MZOneStopMedicalCareServer/
+└── MZOneStopMedicalCareDocument/
+```
+
+Nginx `alias` 必须含中间那层 `MZOneStopMedicalCare/`，否则指向不存在目录。
+
+### 13.2 权限坑（500 / redirection cycle）
+
+Nginx worker 以 `www-data` 运行，需要能**穿透 + 读**目录链。默认 `/home/ubuntu` 是 `750 ubuntu:ubuntu`，`www-data` 无法穿透，$uri 查文件失败 → `try_files` 回落到 `index.html` → 同一个 location 再匹配 → "rewrite or internal redirection cycle"（10 次后 500）。
+
+修复（一次性）：
+
+```bash
+sudo chmod o+x /home/ubuntu /home/ubuntu/apps
+sudo chmod -R o+rX \
+  /home/ubuntu/apps/MZOneStopMedicalCare/MZOneStopMedicalCareClient/dist \
+  /home/ubuntu/apps/MZOneStopMedicalCare/MZOneStopMedicalCareBusiness/dist
+# 验证 worker 能读
+sudo -u www-data cat .../dist/index.html | head -3
+```
+
+诊断诀窍：**"rewrite or internal redirection cycle" 通常不是 Nginx 配置逻辑错，而是目标文件 worker 读不到**。先做 `sudo -u www-data stat` / `cat` 测，通不了就修权限。
+
+### 13.3 Nginx 模板同步漏洞
+
+`git pull` 只更新仓库里的 `medicine.conf`，不会自动同步到 `/etc/nginx/sites-available/`。部署脚本的 `--steps nginx` 会 `cp + nginx -t + reload`，**每次改完 nginx 模板必须跑这步**，或手动：
+
+```bash
+sudo cp MZOneStopMedicalCareDocument/nginx/medicine.conf /etc/nginx/sites-available/medicine.conf
+sudo nginx -t && sudo systemctl reload nginx
+```
+
+验证当前 live 配置：`sudo grep alias /etc/nginx/sites-available/medicine.conf`。
+
+### 13.4 落地后验证命令
+
+```bash
+curl -I http://127.0.0.1/medicine-h5/client/         # 200
+curl -I http://127.0.0.1/medicine-h5/management/     # 200
+curl http://127.0.0.1/api/medicine/health            # {"resCode":"00100000",...}
+```
+
+### 13.5 无关的旁观日志
+
+`/var/log/nginx/medicine_error.log` 会混入老应用 `/h5/...` 的 404 与根目录 `/favicon.ico` 的 404，与本项目无关，定位时按 `medicine-h5` 关键字过滤。
+
 ---
 
 > 更新规则：每次完成阶段性工作或确认关键决定，应当回到此文件追加/修订相关条目，以便下一次开发会话能够快速接上。
