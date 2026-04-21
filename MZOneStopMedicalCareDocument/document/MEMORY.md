@@ -197,6 +197,22 @@ sudo python3 MZOneStopMedicalCareDocument/script/deploy_mz_medicine_application.
 
 ## 十四、前端国际化（i18n）
 
+### 14.0 字符串里含 `@` / `|` / `{` 要绕开 `t()`（2026-04-20 线上二连坑）
+
+vue-i18n 的 message 编译器会把以下字符解释为语法：
+
+- `@:key` / `@.lower:key` / `@{key}` —— 联动消息（linked message）。**任何** `@` 都会进入 linked-message 分词路径；若后面不是 `:`/`.`/`{`，抛
+  `Invalid linked format`。
+- `|` —— 复数（plural）分隔。
+- `{name}` —— 命名插值。
+
+我们的坑点：
+
+- `hello@carebridgechina.com`、`you@example.com` 两个邮箱字符串走 `t()` → 抛 `Invalid linked format` → 整页只剩 Header/Footer。
+  修复：改走 `useMessages()` 直接读原始 locale 字符串（见下面 14.1）。
+
+规则：**凡是 locale 字符串含 `@` / `|` / `{` 的，必须用 `useMessages()` 绕开 `t()`**；新增这类字符串时要记得同步处理。
+
 ### 14.1 vue-i18n `rt()` 陷阱（2026-04-20 线上发现）
 
 `tm()` + `rt()` 这组 API 在 `vue-i18n@9.13.x` 下不能通用。`rt()` 的内部实现只接受 `MessageFunction`（预编译过的消息函数）；

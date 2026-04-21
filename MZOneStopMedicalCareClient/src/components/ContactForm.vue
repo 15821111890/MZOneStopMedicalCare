@@ -14,7 +14,7 @@
       </label>
       <label class="field md:col-span-2">
         <span>{{ t('contact.email') }}</span>
-        <input v-model="form.email" type="email" required :placeholder="t('contact.emailPlaceholder')" />
+        <input v-model="form.email" type="email" required :placeholder="emailPlaceholder" />
       </label>
       <label class="field md:col-span-2">
         <span>{{ t('contact.phone') }}</span>
@@ -64,9 +64,14 @@
 <script setup lang="ts">
 import { computed, reactive, ref } from 'vue';
 import { useI18n } from 'vue-i18n';
+import { useMessages } from '@/i18n';
 import { submitLead } from '@/api/modules/lead';
 
 const { t } = useI18n();
+const m = useMessages();
+
+// placeholder 含 @（you@example.com），走 t() 会被 vue-i18n 当 linked-message 解析报错
+const emailPlaceholder = computed(() => m.value.contact.emailPlaceholder);
 
 const INTERESTS = computed(() => [
   { value: 'Health Screening', label: t('services.healthScreening') },

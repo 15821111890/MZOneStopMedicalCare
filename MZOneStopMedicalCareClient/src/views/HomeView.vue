@@ -117,7 +117,7 @@
             </span>
             <div>
               <div class="text-sm text-white/60 uppercase tracking-wider">{{ t('home.contactEmailLabel') }}</div>
-              <div class="text-lg font-semibold">{{ t('home.contactEmailValue') }}</div>
+              <div class="text-lg font-semibold">{{ contactEmail }}</div>
             </div>
           </div>
           <div class="flex gap-4 items-start">
@@ -161,4 +161,8 @@ const serviceStyles = [
 ];
 
 const journeyTags = computed(() => m.value.home.journeyTags);
+
+// 邮箱字符串含 @，若走 t() 会被 vue-i18n 当作 linked-message 起点并抛
+// "Invalid linked format"。绕开编译，直接读原始 locale。
+const contactEmail = computed(() => m.value.home.contactEmailValue);
 </script>
